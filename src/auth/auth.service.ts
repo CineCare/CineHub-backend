@@ -14,8 +14,8 @@ export class AuthService {
 
     async login(email: string, password: string): Promise<AuthEntity> {
         const user = await this.prisma.user.findUnique({where:{email}});
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if(!user || !isPasswordValid) {
+        const isPasswordValid = !user ? false : await bcrypt.compare(password, user.password);
+        if(!isPasswordValid) {
             throw new UnauthorizedException("Incorrect email and/or password !");
         }
         return {

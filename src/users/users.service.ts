@@ -8,7 +8,7 @@ export class UsersService {
     constructor(private prisma: PrismaService) {}
 
     async getList(): Promise<UserEntity[]> {
-        return await this.prisma.user.findMany();
+        return await this.prisma.user.findMany({select:{id: true, pseudo: true}});
     }
 
     async getOne(id: number): Promise<UserEntity> {

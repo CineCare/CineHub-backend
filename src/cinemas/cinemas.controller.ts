@@ -2,8 +2,10 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CinemasService } from './cinemas.service';
 import { Cinema } from '@prisma/client';
 import { CreateCinemaDTO } from './DTO/create-cinema.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('cinemas')
+@ApiTags('cinemas')
 export class CinemasController {
     constructor(private readonly cinemasService: CinemasService) {}
 

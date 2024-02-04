@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateCinemaDTO {
+export class AuthEntity {
     @ApiProperty()
-    name: string;
+    accessToken: string;
 }

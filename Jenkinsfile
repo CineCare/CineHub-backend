@@ -23,7 +23,9 @@ pipeline {
 
         stage('install') {
             steps {
-                echo 'Hello there!'
+                sh '''
+                    ls -l
+                '''
                 
             }
         }

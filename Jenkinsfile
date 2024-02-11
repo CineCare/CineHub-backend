@@ -23,6 +23,7 @@ pipeline {
 
         stage('install') {
             steps {
+                echo 'performing install'
                 sh '''
                     ls -l
                 '''

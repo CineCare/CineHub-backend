@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']],
-                userRemoteConfigs: [[url: 'https://github.com/CineCare/CineHub-backend.git']]])
+                userRemoteConfigs: [[url: 'git@github.com:CineCare/CineHub-backend.git']]])
             }
         }
 

@@ -1,5 +1,9 @@
 pipeline {
     agent any
+
+    tools {
+        nodejs 'NodeJs20'
+    }
     
     stages {
         stage('Clean') {

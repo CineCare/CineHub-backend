@@ -20,7 +20,7 @@ pipeline {
 
                 git branch: 'main',
                 credentialsId: 'Whitedog_credentials',
-                url: 'git@github.com:CineCare/CineHub-backend.git'
+                url: 'https://github.com/CineCare/CineHub-backend.git'
 
             }
         }

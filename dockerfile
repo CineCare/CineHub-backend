@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Copy .env from the local machine ( check  path )
-COPY /home/whitedog/web/cinecare/backend/.env .
+COPY /var/jenkins_home/secrets/cinecare_backend/.env .
 
 RUN npm install
 # If you are building your code for production

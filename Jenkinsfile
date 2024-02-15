@@ -40,7 +40,7 @@ pipeline {
             steps {
                 sh '''
                     touch .env
-                    echo "DATABASE_URL=mysql://root:cinehub@cinehub_db:3306/cinehub >> .env
+                    echo "DATABASE_URL=mysql://root:cinehub@cinehub_db:3306/cinehub" >> .env
                     echo "DATABASE_PROVIDER=mysql" >> .env
                     echo "APP_PORT=3000" >> .env
                     docker build -t whitedog44/cinehub:backend_latest .

@@ -37,10 +37,10 @@ pipeline {
         stage('Build docker') {
             steps {
                 sh '''
-                    pwd
-                    #docker build -t whitedog44/cinehub:backend_latest .
+                    cp /home.whitedog/web/cinecare/backend/.env .
+                    docker build -t whitedog44/cinehub:backend_latest .
 
-                    #docker push whitedog44/cinehub:backend_latest
+                    docker push whitedog44/cinehub:backend_latest
                 '''
             }
         }

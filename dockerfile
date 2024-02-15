@@ -7,9 +7,6 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-# Copy .env from the local machine ( check  path )
-COPY /var/jenkins_home/cinecare_backend/.env .
-
 RUN npm install
 # If you are building your code for production
 # RUN npm ci --omit=dev

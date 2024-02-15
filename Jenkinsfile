@@ -5,7 +5,7 @@ pipeline {
         nodejs 'nodeJS'
     }
 
-    options { buildDiscarder(logRotator(numToKeepStr: '1')) }
+    options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     
     stages {
         stage('Clean') {

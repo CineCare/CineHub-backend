@@ -37,20 +37,21 @@ pipeline {
         stage('Build docker') {
             steps {
                 sh '''
-                    docker build -t whitedog44/cinehub:backend_latest .
+                    pwd
+                    #docker build -t whitedog44/cinehub:backend_latest .
 
-                    docker push whitedog44/cinehub:backend_latest
+                    #docker push whitedog44/cinehub:backend_latest
                 '''
             }
         }
 
-        stage('Update stack portainer') {
-            steps {
-                sh '''
-                    docker service update --image whitedog44/cinehub:backend_latest cinehub_backend
-                '''
-            }
-        }
+        // stage('Update stack portainer') {
+        //     steps {
+        //         sh '''
+        //             docker service update --image whitedog44/cinehub:backend_latest cinehub_backend
+        //         '''
+        //     }
+        // }
 
         
 

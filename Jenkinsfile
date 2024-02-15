@@ -4,6 +4,8 @@ pipeline {
     tools {
         nodejs 'nodeJS'
     }
+
+    options { buildDiscarder(logRotator(numToKeepStr: '1')) }
     
     stages {
         stage('Clean') {

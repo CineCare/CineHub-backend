@@ -45,7 +45,7 @@ pipeline {
                 withCredentials([file(credentialsId: 'backend_env', variable: 'mySecretEnvFile')]){
                     sh 'cp $mySecretEnvFile $WORKSPACE'
                 }
-                sh 'echo $DOCKER_CREDENTIALS_PSW | sudo docker login -u $DOCKER_CREDENTIALS_USR --password-stdin'
+                sh 'echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin'
                 // sh '''
                     
                 //     docker build -t whitedog44/cinehub:backend_latest .

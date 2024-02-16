@@ -54,7 +54,7 @@ pipeline {
         stage('Update stack portainer') {
             steps {
                 sh '''
-                    docker service update --image whitedog44/cinehub:backend_latest cinehub_backend
+                    docker pull whitedog44/cinehub:backend_latest && docker restart cinehub_backend
                 '''
             }
         }

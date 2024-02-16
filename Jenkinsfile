@@ -41,13 +41,16 @@ pipeline {
                 withCredentials([file(credentialsId: 'backend_env', variable: 'mySecretEnvFile')]){
                     sh 'cp $mySecretEnvFile $WORKSPACE'
                 }
-                sh '''
+                // sh '''
                     
-                    docker build -t whitedog44/cinehub:backend_latest .
+                //     docker build -t whitedog44/cinehub:backend_latest .
 
-                    docker push whitedog44/cinehub:backend_latest
-                '''
-            }
+                //     #docker push whitedog44/cinehub:backend_latest
+                // '''
+                dockerImage = docker.build("whitedog44/cinehub:backend_latest")
+                withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
+                    dockerImage.push()
+                }
         }
 
         // stage('Build docker') {

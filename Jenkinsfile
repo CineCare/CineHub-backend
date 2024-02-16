@@ -39,7 +39,8 @@ pipeline {
         stage('Test build docker') {
             steps {
                 sh '''
-                    cp "/home/whitedog/web/cinacare/backend/.env" .
+                    echo whoami
+                    #cp "/home/whitedog/web/cinacare/backend/.env" .
                     docker build -t whitedog44/cinehub:backend_latest .
 
                     docker push whitedog44/cinehub:backend_latest

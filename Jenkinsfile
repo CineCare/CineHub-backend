@@ -47,8 +47,9 @@ pipeline {
 
                 //     #docker push whitedog44/cinehub:backend_latest
                 // '''
+                dockerImage = docker.build("whitedog44/cinehub:backend_latest")
                 withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
-                    docker push whitedog44/cinehub:backend_latest
+                    dockerImage.push()
                 }
             }
         }

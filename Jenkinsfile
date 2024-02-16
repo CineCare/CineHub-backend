@@ -43,11 +43,9 @@ pipeline {
                 }
                 sh '''
                     
-                    ls -la
-                    cat .env
-                    #docker build -t whitedog44/cinehub:backend_latest .
+                    docker build -t whitedog44/cinehub:backend_latest .
 
-                    #docker push whitedog44/cinehub:backend_latest
+                    docker push whitedog44/cinehub:backend_latest
                 '''
             }
         }

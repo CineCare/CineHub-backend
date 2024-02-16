@@ -6,6 +6,10 @@ pipeline {
     }
 
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
+
+    environment {
+        DOCKER_CREDENTIALS = credentials('dockerHub')
+    }
     
     stages {
         stage('Clean') {
@@ -41,18 +45,14 @@ pipeline {
                 withCredentials([file(credentialsId: 'backend_env', variable: 'mySecretEnvFile')]){
                     sh 'cp $mySecretEnvFile $WORKSPACE'
                 }
+                sh 'echo $DOCKER_CREDENTIALS_PSW | sudo docker login -u $DOCKER_CREDENTIALS_USR --password-stdin'
                 // sh '''
                     
                 //     docker build -t whitedog44/cinehub:backend_latest .
 
                 //     #docker push whitedog44/cinehub:backend_latest
                 // '''
-                node {
-                    dockerImage = docker.build("whitedog44/cinehub:backend_latest")
-                    withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
-                        dockerImage.push()
-                    }
-                }
+                
                 
             }
         }

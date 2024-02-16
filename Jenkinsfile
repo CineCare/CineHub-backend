@@ -39,11 +39,11 @@ pipeline {
         stage('Test build docker') {
             steps {
                 sh '''
-                    echo whoami
+                    whoami
                     #cp "/home/whitedog/web/cinacare/backend/.env" .
-                    docker build -t whitedog44/cinehub:backend_latest .
+                    #docker build -t whitedog44/cinehub:backend_latest .
 
-                    docker push whitedog44/cinehub:backend_latest
+                    #docker push whitedog44/cinehub:backend_latest
                 '''
             }
         }

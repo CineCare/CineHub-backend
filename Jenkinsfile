@@ -38,9 +38,12 @@ pipeline {
 
         stage('Test build docker') {
             steps {
+                withCredentials([file(credentialsId: 'backend_env', variable: 'mySecretEnvFile')]){
+                    sh 'cp $mySecretEnvFile $WORKSPACE'
+                }
                 sh '''
-                    pwd
-                    cp "/home/whitedog/web/cinacare/backend/.env" $WORKSPACE
+                    
+                    ls -l
                     #docker build -t whitedog44/cinehub:backend_latest .
 
                     #docker push whitedog44/cinehub:backend_latest

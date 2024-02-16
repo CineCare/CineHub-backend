@@ -40,7 +40,7 @@ pipeline {
             steps {
                 sh '''
                     pwd
-                    cp "/home/whitedog/web/cinacare/backend/.env" .
+                    cp "/home/whitedog/web/cinacare/backend/.env" $WORKSPACE
                     #docker build -t whitedog44/cinehub:backend_latest .
 
                     #docker push whitedog44/cinehub:backend_latest

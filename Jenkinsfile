@@ -51,6 +51,7 @@ pipeline {
                 withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
                     dockerImage.push()
                 }
+            }
         }
 
         // stage('Build docker') {

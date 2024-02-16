@@ -21,7 +21,7 @@ pipeline {
                 // userRemoteConfigs: [credentialsId: 'Whitedog_credentials',[url: 'git@github.com:CineCare/CineHub-backend.git']]])
 
                 git branch: 'main',
-                credentialsId: 'Whitedog',
+                credentialsId: 'cinecare_backend',
                 url: 'git@github.com:CineCare/CineHub-backend.git'
 
             }

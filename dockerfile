@@ -7,11 +7,15 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install
+RUN npm install && \
+    npx prisma migrate dev && \
+    npm run build
 # If you are building your code for production
 # RUN npm ci --omit=dev
+
+
 
 # Bundle app source
 COPY . .
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start:prod" ]

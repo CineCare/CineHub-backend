@@ -63,7 +63,9 @@ pipeline {
 
         stage('test using credential') {
             steps {
-                echo $PORTAINER_TOKEN
+                configFileProvider([configFile(fileId: 'portainer_token', variable: 'portainer_token')]) {
+                    echo $portainer_token
+                }
             }
         }
     }

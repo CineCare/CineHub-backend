@@ -26,14 +26,14 @@ pipeline {
             }
         }
 
-        // stage('install') {
-        //     steps {
-        //         echo 'performing install...'
-        //         sh '''
-        //             npm install
-        //         '''
-        //     }
-        // }
+        stage('install') {
+            steps {
+                echo 'performing install...'
+                sh '''
+                    npm install
+                '''
+            }
+        }
 
         stage('build & push docker image') {
             steps {

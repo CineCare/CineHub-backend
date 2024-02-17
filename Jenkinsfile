@@ -54,7 +54,7 @@ pipeline {
         stage('Update stack portainer') {
             steps {
                 sh '''
-                    docker container restart cinehub_backend
+                    curl -X POST -H "X-API-Key: ptr_lsw9kZuMqb8cSOEdoWlmlp1icGV18A6beI007zpUOJA=" https://portainer.codevert.org/api/stacks/4/stop?endpointId=2
                 '''
             }
         }

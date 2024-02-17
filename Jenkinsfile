@@ -51,12 +51,12 @@ pipeline {
             }
         }
 
-        // stage('Update stack portainer') {
-        //     steps {
-        //         sh '''
-        //             docker stop cinehub_backend && docker pull whitedog44/cinehub:backend_latest && docker compose restart 
-        //         '''
-        //     }
-        // }
+        stage('Update stack portainer') {
+            steps {
+                sh '''
+                    docker container restart cinehub_backend
+                '''
+            }
+        }
     }
 }

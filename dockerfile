@@ -12,9 +12,7 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-RUN npx prisma migrate dev && \
-    npm run build
 # If you are building your code for production
 # RUN npm ci --omit=dev
 
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "npm", "run", "init" ]

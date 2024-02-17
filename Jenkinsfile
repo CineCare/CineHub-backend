@@ -9,6 +9,7 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS = credentials('dockerHub')
+        PORTINAER_TOKEN = credentials('portainer_token')
     }
     
     stages {
@@ -62,9 +63,7 @@ pipeline {
 
         stage('test using credential') {
             steps {
-                configFileProvider([configFile(fileId: 'portainer_token', variable: 'portainer_token')]) {
-                    echo $portainer_token
-                }
+                sh 'echo $PORTAINER_TOKEN'
             }
         }
     }

@@ -9,7 +9,6 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS = credentials('dockerHub')
-        PORTAINER_TOKEN = credentials('portainer_token')
     }
     
     stages {

@@ -55,6 +55,7 @@ pipeline {
             steps {
                 sh '''
                     curl -X POST -H "X-API-Key: ptr_lsw9kZuMqb8cSOEdoWlmlp1icGV18A6beI007zpUOJA=" https://portainer.codevert.org/api/stacks/4/stop?endpointId=2 &&
+                    docker rm whitedog44/cinehub:backend_latest &&
                     curl -X POST -H "X-API-Key: ptr_lsw9kZuMqb8cSOEdoWlmlp1icGV18A6beI007zpUOJA=" https://portainer.codevert.org/api/stacks/4/start?endpointId=2
                 '''
             }

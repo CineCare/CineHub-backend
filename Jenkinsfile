@@ -53,7 +53,7 @@ pipeline {
                     echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin
                     docker build -t "whitedog44/cinehub:backend_${DOCKER_TAG}" .
 
-                    docker push whitedog44/cinehub:backend_latest
+                    docker push whitedog44/cinehub:backend_${DOCKER_TAG}
                 '''
             }
         }

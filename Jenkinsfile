@@ -45,7 +45,7 @@ pipeline {
         stage('build & push docker image') {
             steps {
                 //copy .env file from jenkins credentials to current workspace
-                withCredentials([file(credentialsId: '${ENV_ID}', variable: 'envFile')]){
+                withCredentials([file(credentialsId: "${ENV_ID}", variable: 'envFile')]){
                     sh 'cp $envFile $WORKSPACE'
                 }
                 //connect to docker hub, build image and push to registry

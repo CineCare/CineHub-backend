@@ -17,7 +17,6 @@ pipeline {
         stage('Clean') {
             steps {
                 cleanWs()
-                //sh 'printenv'
                 sh 'echo ${BRANCH_NAME}'
                 sh 'echo ${DOCKER_TAG}'
                 sh 'echo ${ENV_ID}'
@@ -58,16 +57,16 @@ pipeline {
             }
         }
 
-        // stage('Update stack portainer') {
-        //     steps {
-        //         //stop and restart portainer stack via api
-        //         withCredentials([string(credentialsId: 'portainer_token', variable: 'TOKEN')]) { //set SECRET with the credential content
-        //             sh '''
-        //                 curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/stop?endpointId=2 &&
-        //                 curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/start?endpointId=2
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Update stack portainer') {
+            steps {
+                //stop and restart portainer stack via api
+                withCredentials([string(credentialsId: 'portainer_token', variable: 'TOKEN')]) { //set SECRET with the credential content
+                    sh '''
+                        curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/stop?endpointId=2 &&
+                        curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/start?endpointId=2
+                    '''
+                }
+            }
+        }
     }
 }

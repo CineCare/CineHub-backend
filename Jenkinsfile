@@ -17,7 +17,7 @@ pipeline {
             steps {
                 cleanWs()
                 
-                sh 'echo ${DOCKAR_TAG}'
+                sh 'echo ${DOCKER_TAG}'
                 
             }
         }

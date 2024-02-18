@@ -18,20 +18,20 @@ pipeline {
             steps {
                 cleanWs()
                 //sh 'printenv'
-                sh 'echo ${env.BRANCH_NAME}'
+                sh 'echo ${BRANCH_NAME}'
                 sh 'echo ${DOCKER_TAG}'
                 sh 'echo ${ENV_ID}'
                 
             }
         }
 
-        // stage('pull sources') {
-        //     steps {
-        //         git branch: '${env.BRANCH_NAME}',
-        //         credentialsId: 'cinecare_backend',
-        //         url: 'git@github.com:CineCare/CineHub-backend.git'
-        //     }
-        // }
+        stage('pull sources') {
+            steps {
+                git branch: '${BRANCH_NAME}',
+                credentialsId: 'cinecare_backend',
+                url: 'git@github.com:CineCare/CineHub-backend.git'
+            }
+        }
 
         // stage('install') {
         //     steps {

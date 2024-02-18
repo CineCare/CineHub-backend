@@ -9,7 +9,7 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS = credentials('dockerHub')
-        DOCKER_TAG = env.BRANCH_NAME == 'main' ? 'latest' : env.BRANCH_NAME
+        DOCKER_TAG = (env.BRANCH_NAME == 'main' ? 'latest' : env.BRANCH_NAME)
     }
     
     stages {

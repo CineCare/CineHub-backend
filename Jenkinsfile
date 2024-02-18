@@ -9,13 +9,14 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS = credentials('dockerHub')
+        DOCKER_TAG = env.BRANCH_NAME == 'main' ? 'latest' : env.BRANCH_NAME
     }
     
     stages {
         stage('Clean') {
             steps {
                 cleanWs()
-                DOCKER_TAG = env.BRANCH_NAME == 'main' ? 'latest' : env.BRANCH_NAME
+                
                 sh 'echo ${DOCKAR_TAG}'
                 
             }

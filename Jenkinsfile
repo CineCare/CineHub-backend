@@ -15,6 +15,9 @@ pipeline {
         stage('Clean') {
             steps {
                 cleanWs()
+                DOCKER_TAG = env.BRANCH_NAME == 'main' ? 'latest' : env.BRANCH_NAME
+                sh 'echo ${DOCKAR_TAG}'
+                
             }
         }
 

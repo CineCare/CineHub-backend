@@ -10,6 +10,7 @@ pipeline {
     environment {
         DOCKER_CREDENTIALS = credentials('dockerHub')
         DOCKER_TAG = "${env.BRANCH_NAME == 'main' ? 'latest' : env.BRANCH_NAME}"
+        ENV_ID = "${env.BRANCH_NAME == 'main' ? 'backend_env' : "backend" + env.BRANCH_NAME}"
     }
     
     stages {
@@ -18,13 +19,14 @@ pipeline {
                 cleanWs()
                 
                 sh 'echo ${DOCKER_TAG}'
+                sh 'echo ${ENV_ID}'
                 
             }
         }
 
         stage('pull sources') {
             steps {
-                git branch: 'main',
+                git branch: '${env.BRANCH_NAME}',
                 credentialsId: 'cinecare_backend',
                 url: 'git@github.com:CineCare/CineHub-backend.git'
             }
@@ -42,8 +44,8 @@ pipeline {
         stage('build & push docker image') {
             steps {
                 //copy .env file from jenkins credentials to current workspace
-                withCredentials([file(credentialsId: 'backend_env', variable: 'mySecretEnvFile')]){
-                    sh 'cp $mySecretEnvFile $WORKSPACE'
+                withCredentials([file(credentialsId: 'backend_env', variable: 'envFile')]){
+                    sh 'cp $envFile $WORKSPACE'
                 }
                 //connect to docker hub, build image and push to registry
                 sh '''

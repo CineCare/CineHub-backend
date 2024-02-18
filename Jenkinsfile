@@ -10,7 +10,7 @@ pipeline {
     environment {
         DOCKER_CREDENTIALS = credentials('dockerHub')
         DOCKER_TAG = "${env.BRANCH_NAME == 'main' ? 'latest' : env.BRANCH_NAME}"
-        ENV_ID = "${env.BRANCH_NAME == 'main' ? 'backend_env' : "backend_" + env.BRANCH_NAME}"
+        ENV_ID = "${env.BRANCH_NAME == 'main' ? 'backend_env' : "backend_env_" + env.BRANCH_NAME}"
     }
     
     stages {
@@ -33,30 +33,30 @@ pipeline {
             }
         }
 
-        // stage('install') {
-        //     steps {
-        //         echo 'performing install...'
-        //         sh '''
-        //             npm install
-        //         '''
-        //     }
-        // }
+        stage('install') {
+            steps {
+                echo 'performing install...'
+                sh '''
+                    npm install
+                '''
+            }
+        }
 
-        // stage('build & push docker image') {
-        //     steps {
-        //         //copy .env file from jenkins credentials to current workspace
-        //         withCredentials([file(credentialsId: 'backend_env', variable: 'envFile')]){
-        //             sh 'cp $envFile $WORKSPACE'
-        //         }
-        //         //connect to docker hub, build image and push to registry
-        //         sh '''
-        //             echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin
-        //             docker build -t whitedog44/cinehub:backend_latest .
+        stage('build & push docker image') {
+            steps {
+                //copy .env file from jenkins credentials to current workspace
+                withCredentials([file(credentialsId: '${ENV_ID}', variable: 'envFile')]){
+                    sh 'cp $envFile $WORKSPACE'
+                }
+                //connect to docker hub, build image and push to registry
+                sh '''
+                    echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin
+                    docker build -t whitedog44/cinehub:backend_${DOCKER_TAG} .
 
-        //             docker push whitedog44/cinehub:backend_latest
-        //         '''
-        //     }
-        // }
+                    docker push whitedog44/cinehub:backend_latest
+                '''
+            }
+        }
 
         // stage('Update stack portainer') {
         //     steps {

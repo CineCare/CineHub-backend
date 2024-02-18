@@ -51,7 +51,7 @@ pipeline {
                 //connect to docker hub, build image and push to registry
                 sh '''
                     echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin
-                    docker build -t whitedog44/cinehub:backend_${DOCKER_TAG} .
+                    docker build -t whitedog44/cinehub:backend_$DOCKER_TAG .
 
                     docker push whitedog44/cinehub:backend_latest
                 '''

@@ -17,7 +17,8 @@ pipeline {
         stage('Clean') {
             steps {
                 cleanWs()
-                sh 'echo ${env.BRANCH_NAME}'
+                
+                sh 'echo ${env.GIT_BRANCH}'
                 sh 'echo ${DOCKER_TAG}'
                 sh 'echo ${ENV_ID}'
                 

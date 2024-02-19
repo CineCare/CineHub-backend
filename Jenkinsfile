@@ -75,8 +75,7 @@ pipeline {
     post {
         failure {
             sh "echo ${GIT_COMMIT_MSG}"
-            sh "echo ${error}"
-            discordSend description: "Jenkins Pipeline Build Backend ${BRANCH_NAME} failed ! ☹️\ngit commit message : ${GIT_COMMIT_MSG}\nError on stage ${STAGE_NAME}",
+            discordSend description: "Jenkins Pipeline Build Backend ${BRANCH_NAME} failed ! ☹️\ngit commit message :\n${GIT_COMMIT_MSG}\n\nError on stage ${STAGE_NAME}",
             footer: "Better luck next try ?",
             link: "$BUILD_URL",
             result: currentBuild.currentResult,

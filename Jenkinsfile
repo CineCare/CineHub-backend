@@ -27,6 +27,7 @@ pipeline {
                 git branch: '${BRANCH_NAME}',
                 credentialsId: 'cinecare_backend',
                 url: 'git@github.com:CineCare/CineHub-backend.git'
+                env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
             }
         }
 
@@ -72,6 +73,7 @@ pipeline {
     post {
         failure {
             discordSend description: "Jenkins Pipeline Build Backend ${BRANCH_NAME} failed ! ☹️\n
+            git commit message : ${GIT_COMMIT_MSG}
             Error on stage ${STAGE_NAME} : ${error.message}",
             footer: "Better luck next try ?",
             link: "$BUILD_URL",

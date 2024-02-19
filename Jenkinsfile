@@ -60,7 +60,7 @@ pipeline {
 
         stage('Update stack portainer') {
             steps {
-                stop and restart portainer stack via api
+                //stop and restart portainer stack via api
                 withCredentials([string(credentialsId: 'portainer_token', variable: 'TOKEN')]) { //set SECRET with the credential content
                     sh '''
                         curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/stop?endpointId=2 &&

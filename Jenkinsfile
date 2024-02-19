@@ -67,7 +67,6 @@ pipeline {
                         curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/start?endpointId=2
                     '''
                 }
-                error "Don't panic, this is a fake error for test"
             }
         }
     }

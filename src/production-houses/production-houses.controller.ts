@@ -1,5 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ProductionHousesService } from './production-houses.service';
+import { ProductionHouse } from '@prisma/client';
+import { CreateProductionHouseDTO } from './DTO/create-ProductionHouse.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('production-houses')
@@ -18,5 +20,10 @@ export class ProductionHousesController {
         //TODO throw error if not a number
         const id = +idString;
         return await this.productionHousesService.getOne(id);
+    }
+
+    @Post()
+    async addProductionHouse(@Body() productionHouse: CreateProductionHouseDTO) {
+        return await this.productionHousesService.createProductionHouse(productionHouse);
     }
 }

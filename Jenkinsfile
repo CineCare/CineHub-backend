@@ -39,37 +39,36 @@ pipeline {
                 sh '''
                     npm install
                 '''
-                error "Don't panic, this is another fake error"
             }
         }
 
-        // stage('build & push docker image') {
-        //     steps {
-        //         //copy .env file from jenkins credentials to current workspace
-        //         withCredentials([file(credentialsId: "${ENV_ID}", variable: 'envFile')]){
-        //             sh 'cp $envFile $WORKSPACE'
-        //         }
-        //         //connect to docker hub, build image and push to registry
-        //         sh '''
-        //             echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin
-        //             docker build -t "whitedog44/cinehub:backend_${DOCKER_TAG}" .
+        stage('build & push docker image') {
+            steps {
+                //copy .env file from jenkins credentials to current workspace
+                withCredentials([file(credentialsId: "${ENV_ID}", variable: 'envFile')]){
+                    sh 'cp $envFile $WORKSPACE'
+                }
+                //connect to docker hub, build image and push to registry
+                sh '''
+                    echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin
+                    docker build -t "whitedog44/cinehub:backend_${DOCKER_TAG}" .
 
-        //             docker push whitedog44/cinehub:backend_${DOCKER_TAG}
-        //         '''
-        //     }
-        // }
+                    docker push whitedog44/cinehub:backend_${DOCKER_TAG}
+                '''
+            }
+        }
 
-        // stage('Update stack portainer') {
-        //     steps {
-        //         //stop and restart portainer stack via api
-        //         withCredentials([string(credentialsId: 'portainer_token', variable: 'TOKEN')]) { //set SECRET with the credential content
-        //             sh '''
-        //                 curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/stop?endpointId=2 &&
-        //                 curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/start?endpointId=2
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Update stack portainer') {
+            steps {
+                //stop and restart portainer stack via api
+                withCredentials([string(credentialsId: 'portainer_token', variable: 'TOKEN')]) { //set SECRET with the credential content
+                    sh '''
+                        curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/stop?endpointId=2 &&
+                        curl -X POST -H "X-API-Key: ${TOKEN}" https://portainer.codevert.org/api/stacks/4/start?endpointId=2
+                    '''
+                }
+            }
+        }
     }
 
     post {

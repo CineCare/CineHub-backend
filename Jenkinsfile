@@ -39,7 +39,7 @@ pipeline {
                 sh '''
                     npm install
                 '''
-                error "Don't panic, this is a fake error"
+                error "Don't panic, this is another fake error"
             }
         }
 

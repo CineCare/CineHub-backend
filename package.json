@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "init": "nest build && npx prisma migrate deploy --skip-seed && node dist/src/main",
+    "init": "nest build && npx prisma migrate deploy && node dist/src/main",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

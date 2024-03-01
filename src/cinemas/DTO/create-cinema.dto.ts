@@ -7,8 +7,8 @@ export class CreateCinemaDTO {
     @ApiProperty()
     address1: string;
 
-    @ApiProperty()
-    address2: string;
+    @ApiProperty({required: false})
+    address2?: string;
 
     @ApiProperty()
     city: string;
@@ -16,9 +16,9 @@ export class CreateCinemaDTO {
     @ApiProperty()
     postalCode: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     email?: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     phone?: string;
 }

@@ -17,7 +17,9 @@ pipeline {
         stage('Clean') {
             steps {
                 cleanWs()
-                sh 'printenv'
+                sh 'echo ${BRANCH_NAME}'
+                sh 'echo ${DOCKER_TAG}'
+                sh 'echo ${ENV_ID}'
                 
             }
         }
@@ -27,9 +29,6 @@ pipeline {
                 git branch: '${BRANCH_NAME}',
                 credentialsId: 'cinecare_backend',
                 url: 'git@github.com:CineCare/CineHub-backend.git'
-                script {
-                    env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
-                }
             }
         }
 
@@ -43,6 +42,9 @@ pipeline {
         }
 
         stage('build & push docker image') {
+            when {
+                expression { env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'dev'}
+            }
             steps {
                 //copy .env file from jenkins credentials to current workspace
                 withCredentials([file(credentialsId: "${ENV_ID}", variable: 'envFile')]){
@@ -59,6 +61,9 @@ pipeline {
         }
 
         stage('Update stack portainer') {
+            when {
+                expression { env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'dev'}
+            }
             steps {
                 //stop and restart portainer stack via api
                 withCredentials([string(credentialsId: 'portainer_token', variable: 'TOKEN')]) { //set SECRET with the credential content
@@ -68,25 +73,6 @@ pipeline {
                     '''
                 }
             }
-        }
-    }
-
-    post {
-        regression {
-            sh "echo ${GIT_COMMIT_MSG}"
-            discordSend description: "Jenkins Pipeline Build Backend ${BRANCH_NAME} failed ! ☹️\n\ngit commit message :\n${GIT_COMMIT_MSG}",
-            footer: "Better luck next try ?",
-            link: "$BUILD_URL",
-            result: currentBuild.currentResult,
-            title: JOB_NAME,
-            webhookURL: "https://discord.com/api/webhooks/1208855718338363572/hPxGKwxnigUMvt0ZaPSsAiU1p8Udkdpg4Yo79UCIfo_lxm7Phbe-JLYdTV-22GFCXvYU"
-        }
-        fixed {
-            discordSend description: "Jenkins Pipeline Build Backend ${BRANCH_NAME} succeed ! 😎\n\ngit commit message :\n${GIT_COMMIT_MSG}",
-            footer: "Good job !",
-            link: "$BUILD_URL",
-            result: currentBuild.currentResult,
-            title: JOB_NAME, webhookURL: "https://discord.com/api/webhooks/1208855718338363572/hPxGKwxnigUMvt0ZaPSsAiU1p8Udkdpg4Yo79UCIfo_lxm7Phbe-JLYdTV-22GFCXvYU"
         }
     }
 }

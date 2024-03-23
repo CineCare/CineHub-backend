@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserEntity } from './entities/user.entity';
 import { MineUserEntity } from './entities/mineUser.etity';
@@ -26,7 +26,11 @@ export class UsersService {
         return await this.prisma.prefs.create({data: {userId: id, ...body}});
     }
 
-    async updatePref(id: number, body: PrefUpdateDTO): Promise<PrefEntity> {
-        return await this.prisma.prefs.update({where: {id}, data: body});
+    async updatePref(prefId: number, reqUserId: number, body: PrefUpdateDTO): Promise<PrefEntity> {
+        const prefUserId = (await this.prisma.prefs.findUniqueOrThrow({where: {id: prefId}, select: {userId: true}})).userId;
+        if(prefUserId !== reqUserId) {
+            throw new UnauthorizedException("Vous ne pouvez pas éditer ces préférences");
+        }
+        return await this.prisma.prefs.update({where: {id: prefId}, data: body});
     }
 }

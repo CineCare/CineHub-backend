@@ -1,5 +1,5 @@
-import { Controller, Request, Get, UseGuards, Post, Body, Put, Param, BadRequestException, NotFoundException } from '@nestjs/common';
-import { ApiTags, ApiOkResponse, ApiBearerAuth, ApiNotFoundResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { Controller, Request, Get, UseGuards, Post, Body, Put, Param, BadRequestException, NotFoundException, Delete } from '@nestjs/common';
+import { ApiTags, ApiOkResponse, ApiBearerAuth, ApiNotFoundResponse, ApiBadRequestResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { MineUserEntity } from './entities/mineUser.etity';
@@ -26,6 +26,8 @@ export class UsersController {
         return await this.userService.getMe(req.user.id);
     }
 
+    
+
     @Post('prefs')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
@@ -40,7 +42,6 @@ export class UsersController {
     @Put('prefs/:prefId')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
-    @ApiOkResponse({ type: PrefEntity })
     async updatePref(@Param('prefId') prefId: string, @Request() req, @Body() pref: PrefUpdateDTO): Promise<PrefEntity> {
         if(isNaN(+prefId)) {
             throw new BadRequestException("param id must be a number");
@@ -55,5 +56,25 @@ export class UsersController {
             throw new BadRequestException();
         }
     }
-    
+
+    @ApiOkResponse()
+    @ApiNotFoundResponse()
+    @ApiBadRequestResponse({type: BadRequestException })
+    @Delete('prefs/:prefId')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    async deletePref(@Param('prefId') prefId: string, @Request() req): Promise<void> {
+        if(isNaN(+prefId)) {
+            throw new BadRequestException("param id must be a number");
+        }
+        try {
+            return await this.userService.deletePref(+prefId, req.user.id);
+        } catch(e) {
+            if(e.code === 'P2025') {
+                throw new NotFoundException("prefId");
+            }
+            console.log(e);
+            throw new BadRequestException();
+        }
+    }
 }

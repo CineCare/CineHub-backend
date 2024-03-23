@@ -33,4 +33,12 @@ export class UsersService {
         }
         return await this.prisma.prefs.update({where: {id: prefId}, data: body});
     }
+
+    async deletePref(prefId: number, reqUserId: number): Promise<void> {
+        const prefUserId = (await this.prisma.prefs.findUniqueOrThrow({where: {id: prefId}, select: {userId: true}})).userId;
+        if(prefUserId !== reqUserId) {
+            throw new UnauthorizedException("Vous ne pouvez pas supprimer ces préférences");
+        }
+        await this.prisma.prefs.delete({where: {id: prefId}});
+    }
 }

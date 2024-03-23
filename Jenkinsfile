@@ -42,6 +42,9 @@ pipeline {
         }
 
         stage('build & push docker image') {
+            when {
+                expression { env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'dev'}
+            }
             steps {
                 //copy .env file from jenkins credentials to current workspace
                 withCredentials([file(credentialsId: "${ENV_ID}", variable: 'envFile')]){
@@ -58,6 +61,9 @@ pipeline {
         }
 
         stage('Update stack portainer') {
+            when {
+                expression { env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'dev'}
+            }
             steps {
                 //stop and restart portainer stack via api
                 withCredentials([string(credentialsId: 'portainer_token', variable: 'TOKEN')]) { //set SECRET with the credential content

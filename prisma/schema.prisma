@@ -22,6 +22,7 @@ model User {
 
 model Prefs {
   id Int @id @default(autoincrement())
+  name String
   userId Int
   theme String?
   images Boolean?

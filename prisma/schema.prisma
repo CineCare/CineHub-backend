@@ -15,8 +15,19 @@ model User {
   pseudo String
   email String @unique
   password String
+  prefs Prefs[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Prefs {
+  id Int @id @default(autoincrement())
+  userId Int
+  theme String?
+  images Boolean?
+  audio Boolean?
+  helpLevel Int?
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Cinema {
@@ -28,6 +39,10 @@ model Cinema {
   postalCode String
   email String?
   phone String?
+  gps String?
+  description String?
+  audio String?
+  accessibilities CinemaAccessibility[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -41,6 +56,37 @@ model ProductionHouse {
   postalCode String
   email String?
   phone String?
+  webSite String?
+  gps String?
+  description String?
+  audio String?
+  accessibilities ProductionHousesAccessibility[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model CinemaAccessibility {
+  id Int @id @default(autoincrement())
+  cinemaId Int
+  accessibilityId Int
+  cinema Cinema @relation(fields: [cinemaId], references: [id], onDelete: Cascade)
+  accessibility Accessibility @relation(fields: [accessibilityId], references: [id], onDelete: Cascade)
+}
+
+model ProductionHousesAccessibility {
+  id Int @id @default(autoincrement())
+  productionHouseId Int
+  accessibilityId Int
+  productionHouse ProductionHouse @relation(fields: [productionHouseId], references: [id], onDelete: Cascade)
+  accessibility Accessibility @relation(fields: [accessibilityId], references: [id], onDelete: Cascade)
+}
+
+model Accessibility {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  audio String
+  picto String
+  cinemas CinemaAccessibility[]
+  productionHouses ProductionHousesAccessibility[]
 }

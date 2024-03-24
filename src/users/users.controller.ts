@@ -1,4 +1,4 @@
-import { Controller, Request, Get, UseGuards, Post, Body, Put, Param, BadRequestException, NotFoundException, Delete } from '@nestjs/common';
+import { Controller, Request, Get, UseGuards, Post, Body, Put, Param, BadRequestException, NotFoundException, Delete, UnauthorizedException } from '@nestjs/common';
 import { ApiTags, ApiOkResponse, ApiBearerAuth, ApiNotFoundResponse, ApiBadRequestResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
@@ -78,6 +78,9 @@ export class UsersController {
         } catch(e) {
             if(e.code === 'P2025') {
                 throw new NotFoundException();
+            }
+            if(e instanceof UnauthorizedException) {
+                throw e;
             }
             console.log(e);
             throw new BadRequestException();

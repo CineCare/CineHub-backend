@@ -14,6 +14,8 @@ import { UpdateUserDTO } from './DTO/userUpdate.dto';
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
 
+    @ApiOkResponse({type: Array<UserEntity>})
+    @ApiBadRequestResponse({type: BadRequestException })
     @Get()
     async getList(): Promise<UserEntity[]> {
         return await this.userService.getList();

@@ -12,11 +12,19 @@ export class AccessibilitiesService {
         return await this.prisma.accessibility.findMany();
     }
 
+    async getOne(id: number): Promise<AccessibilityEntity> {
+        return await this.prisma.accessibility.findUniqueOrThrow({where: {id}})
+    }
+
     async createAccessibility(accessibility: CreateAccessibilityDTO): Promise<AccessibilityEntity> {
         return await this.prisma.accessibility.create({data: accessibility})
     }
 
     async updateAccessibility(id: number, accessibility: UpdateAccessibilityDTO): Promise<AccessibilityEntity> {
         return await this.prisma.accessibility.update({where: {id}, data: accessibility});
+    }
+
+    async deleteAccessibility(id: number): Promise<void> {
+        await this.prisma.accessibility.delete({where: {id}});
     }
 }

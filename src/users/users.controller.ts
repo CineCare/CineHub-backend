@@ -103,6 +103,9 @@ export class UsersController {
             if(e.code === 'P2025') {
                 throw new NotFoundException("prefId");
             }
+            if(e instanceof UnauthorizedException) {
+                throw e;
+            }
             console.log(e);
             throw new BadRequestException();
         }

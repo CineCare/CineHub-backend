@@ -14,6 +14,8 @@ import { UpdateUserDTO } from './DTO/userUpdate.dto';
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
 
+    @ApiOkResponse({type: Array<UserEntity>})
+    @ApiBadRequestResponse({type: BadRequestException })
     @Get()
     async getList(): Promise<UserEntity[]> {
         return await this.userService.getList();
@@ -48,7 +50,7 @@ export class UsersController {
             return await this.userService.getOne(+id);
         } catch(e) {
             if(e.code === 'P2025') {
-                throw new NotFoundException();
+                throw new NotFoundException(`id ${id}`);
             }
             console.log(e);
             throw new BadRequestException();
@@ -77,7 +79,7 @@ export class UsersController {
             return await this.userService.updatePref(+prefId, req.user.id, pref);
         } catch(e) {
             if(e.code === 'P2025') {
-                throw new NotFoundException();
+                throw new NotFoundException(`prefId ${prefId}`);
             }
             if(e instanceof UnauthorizedException) {
                 throw e;
@@ -101,7 +103,7 @@ export class UsersController {
             return await this.userService.deletePref(+prefId, req.user.id);
         } catch(e) {
             if(e.code === 'P2025') {
-                throw new NotFoundException("prefId");
+                throw new NotFoundException(`prefId ${prefId}`);
             }
             if(e instanceof UnauthorizedException) {
                 throw e;

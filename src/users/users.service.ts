@@ -15,7 +15,7 @@ export class UsersService {
     }
 
     async getOne(id: number): Promise<UserEntity> {
-        return await this.prisma.user.findUnique({where: {id}, select:{id: true, pseudo: true}});
+        return await this.prisma.user.findUniqueOrThrow({where: {id}, select:{id: true, pseudo: true}});
     }
 
     async getMe(id: number): Promise<MineUserEntity> {

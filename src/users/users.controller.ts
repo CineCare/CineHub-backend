@@ -18,20 +18,37 @@ export class UsersController {
         return await this.userService.getList();
     }
 
+    @ApiOkResponse({ type: MineUserEntity })
     @Get('me')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
-    @ApiOkResponse({ type: MineUserEntity })
     async getMe(@Request() req): Promise<MineUserEntity> {
         return await this.userService.getMe(req.user.id);
     }
 
-    
+    @ApiOkResponse({type: UserEntity})
+    @ApiNotFoundResponse()
+    @ApiBadRequestResponse({type: BadRequestException })
+    @Get(':id')
+    async getOne(@Param('id') id: string): Promise<UserEntity> {
+        if(isNaN(+id)) {
+            throw new BadRequestException("param id must be a number");
+        }
+        try {
+            return await this.userService.getOne(+id);
+        } catch(e) {
+            if(e.code === 'P2025') {
+                throw new NotFoundException();
+            }
+            console.log(e);
+            throw new BadRequestException();
+        }
+    } 
 
+    @ApiOkResponse({ type: PrefEntity })
     @Post('prefs')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
-    @ApiOkResponse({ type: PrefEntity })
     async createPref(@Request() req, @Body() pref: PrefDTO): Promise<PrefEntity> {
         return await this.userService.createPref(req.user.id, pref);
     }

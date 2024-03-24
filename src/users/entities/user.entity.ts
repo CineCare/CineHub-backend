@@ -6,4 +6,7 @@ export class UserEntity {
     
     @ApiProperty()
     pseudo: string;
+
+    @ApiProperty()
+    email?: string;
 }

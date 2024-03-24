@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AuthEntity } from './entities/auth.entity';
 
-
 //TODO set in .env
 export const roundsOfHashing = 10;
 

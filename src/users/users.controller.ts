@@ -7,6 +7,7 @@ import { UserEntity } from './entities/user.entity';
 import { PrefEntity } from './entities/prefs.entity';
 import { PrefDTO } from './DTO/pref.dto';
 import { PrefUpdateDTO } from './DTO/prefUpdate.dto';
+import { UpdateUserDTO } from './DTO/userUpdate.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -24,6 +25,15 @@ export class UsersController {
     @ApiBearerAuth()
     async getMe(@Request() req): Promise<MineUserEntity> {
         return await this.userService.getMe(req.user.id);
+    }
+
+    @ApiOkResponse({type: UserEntity})
+    @ApiBadRequestResponse({type: BadRequestException })
+    @Put('me')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    async updateMe(@Request() req, @Body() body: UpdateUserDTO): Promise<UserEntity> {
+        return await this.userService.updateMe(req.user.id, body);
     }
 
     @ApiOkResponse({type: UserEntity})

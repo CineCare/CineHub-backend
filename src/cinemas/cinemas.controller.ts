@@ -50,7 +50,6 @@ export class CinemasController {
         return await this.cinemasService.createCinema(cinema);
     }
 
-    //TODO put & delete
     @ApiOkResponse({type: CinemaDTO})
     @ApiNotFoundResponse()
     @ApiBadRequestResponse({type: BadRequestException })
@@ -74,7 +73,7 @@ export class CinemasController {
         }
     }
 
-    @ApiCreatedResponse()
+    @ApiOkResponse()
     @ApiNotFoundResponse()
     @ApiBadRequestResponse({type: BadRequestException })
     @Delete(':id')
@@ -94,5 +93,61 @@ export class CinemasController {
             console.log(e);
             throw new BadRequestException();
         }
+    }
+
+    @ApiCreatedResponse()
+    @ApiNotFoundResponse()
+    @ApiBadRequestResponse({type: BadRequestException })
+    @Post(':cinemaId/accessibility/:accessibilityId')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiParam({name: 'cinemaId', description: 'id of the cinema. Must be a number'})
+    @ApiParam({name: 'accessibilityId', description: 'id of the accessibility. Must be a number'})
+    async addAccessibility(@Param('cinemaId') cinemaId: string, @Param('accessibilityId') accessibilityId: string): Promise<string> {
+        let paramsError = [];
+        if(isNaN(+cinemaId)) {
+            paramsError.push('cinemaId');
+        }
+        if(isNaN(+accessibilityId)) {
+            paramsError.push('accessibilityId');
+        }
+        if(paramsError.length > 0) {
+            let errorString = `${paramsError[0] } `;
+            if(paramsError.length > 1) {
+                errorString += ` and ${paramsError[1]} `
+            }
+            errorString += 'must be ';
+            errorString += paramsError.length > 1 ? 'numbers' : 'a number';
+            throw new BadRequestException(errorString);
+        }
+        return await this.cinemasService.addAccessibility(+cinemaId, +accessibilityId);
+    }
+
+    @ApiOkResponse()
+    @ApiNotFoundResponse()
+    @ApiBadRequestResponse({type: BadRequestException })
+    @Delete(':cinemaId/accessibility/:accessibilityId')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiParam({name: 'cinemaId', description: 'id of the cinema. Must be a number'})
+    @ApiParam({name: 'accessibilityId', description: 'id of the accessibility. Must be a number'})
+    async removeAccessibility(@Param('cinemaId') cinemaId: string, @Param('accessibilityId') accessibilityId: string): Promise<void> {
+        let paramsError = [];
+        if(isNaN(+cinemaId)) {
+            paramsError.push('cinemaId');
+        }
+        if(isNaN(+accessibilityId)) {
+            paramsError.push('accessibilityId');
+        }
+        if(paramsError.length > 0) {
+            let errorString = `${paramsError[0] } `;
+            if(paramsError.length > 1) {
+                errorString += ` and ${paramsError[1]} `
+            }
+            errorString += 'must be ';
+            errorString += paramsError.length > 1 ? 'numbers' : 'a number';
+            throw new BadRequestException(errorString);
+        }
+        return await this.cinemasService.removeAccessibility(+cinemaId, +accessibilityId);
     }
 }

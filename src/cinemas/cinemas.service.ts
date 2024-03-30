@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Cinema } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCinemaDTO } from './DTO/create-cinema.dto';
@@ -28,4 +28,49 @@ export class CinemasService {
         await this.prisma.cinema.delete({where: {id}});
     }
 
+    async addAccessibility(cinemaId: number, accessibilityId: number): Promise<string> {
+        try {
+            await this.prisma.cinema.findUniqueOrThrow({where: {id: cinemaId}});
+        } catch(e) {
+            if(e.code === 'P2025') {
+                throw new NotFoundException(`cinemaId ${cinemaId}`);
+            }
+            console.log(e);
+            throw e;
+        }
+        try {
+            await this.prisma.accessibility.findUniqueOrThrow({where: {id: accessibilityId}});
+        } catch(e) {
+            if(e.code === 'P2025') {
+                throw new NotFoundException(`accessibilityId ${accessibilityId}`);
+            }
+            console.log(e);
+            throw e;
+        }
+        await this.prisma.cinemaAccessibility.create({data: {cinemaId, accessibilityId}});
+        //TODO what should be returned ?
+        return `${accessibilityId}`;
+    }
+
+    async removeAccessibility(cinemaId: number, accessibilityId: number): Promise<void> {
+        try {
+            await this.prisma.cinema.findUniqueOrThrow({where: {id: cinemaId}});
+        } catch(e) {
+            if(e.code === 'P2025') {
+                throw new NotFoundException(`cinemaId ${cinemaId}`);
+            }
+            console.log(e);
+            throw e;
+        }
+        try {
+            await this.prisma.cinemaAccessibility.findFirstOrThrow({where: {AND: [{cinemaId}, {accessibilityId}]}});
+        } catch(e) {
+            if(e.code === 'P2025') {
+                throw new NotFoundException(`accessibilityId ${accessibilityId} on cinema ${cinemaId}`);
+            }
+            console.log(e);
+            throw e;
+        }
+        await this.prisma.cinemaAccessibility.deleteMany({where: {AND: [{cinemaId}, {accessibilityId}]}});
+    }
 }

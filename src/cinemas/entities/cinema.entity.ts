@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Accessibility } from "@prisma/client";
 
-export class CinemaDTO {
+export class CinemaEntity {
     @ApiProperty()
     id: number
 
@@ -38,8 +39,11 @@ export class CinemaDTO {
     audio: string | null
 
     @ApiProperty()
+    accessibilities?: Accessibility[] | null
+
+    @ApiProperty()
     createdAt: Date
 
     @ApiProperty()
     updatedAt: Date
-  }
+}

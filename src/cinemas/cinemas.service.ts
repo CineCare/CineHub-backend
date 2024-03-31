@@ -1,19 +1,37 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Cinema } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCinemaDTO } from './DTO/create-cinema.dto';
 import { UpdateCinemaDTO } from './DTO/update-cinema.dto';
+import { CinemaEntity } from './entities/cinema.entity';
+import * as util from 'util';
 
 @Injectable()
 export class CinemasService {
     constructor(private prisma: PrismaService) {}
     
-    async getList(): Promise<Cinema[]> {
-        return await this.prisma.cinema.findMany();
+    async getList(filters: string[]): Promise<Cinema[]> {
+        const accessibilityFilters = ['prm', 'deaf', 'nops'];
+        let findOptions = {AND: []};
+        let accessibilitiesFindOptions = [];
+        for(let item of filters) {
+            if(accessibilityFilters.includes(item)) {
+                accessibilitiesFindOptions.push({accessibilities: {some: {accessibility: {picto: item}}}});
+            }
+        }
+        if(filters.length > 0) {
+            if(accessibilitiesFindOptions.length > 0) {
+                findOptions.AND = accessibilitiesFindOptions;
+            }
+        }
+        //console.log(util.inspect(findOptions, {depth: Infinity}));
+        return (await this.prisma.cinema.findMany({where: findOptions, include: {accessibilities: {select: {accessibility: true}}}})).map(cinema => { return { ...cinema, accessibilities: cinema.accessibilities.map(accessibility => accessibility.accessibility)}});
+        //return await this.prisma.cinema.findMany({where: {AND: [{accessibilities: {some: {accessibility: {picto: 'prm'}}}}, {accessibilities: {some: {accessibility: {picto: 'deaf'}}}}]}, include: {accessibilities: {select: {accessibility: true}}}});
     }
 
-    async getOne(id: number): Promise<Cinema> {
-        return await this.prisma.cinema.findUniqueOrThrow({where: {id}, include: {accessibilities: {select: {accessibility: true}}}});
+    async getOne(id: number): Promise<CinemaEntity> {
+        const result = await this.prisma.cinema.findUniqueOrThrow({where: {id}, include: {accessibilities: {select: {accessibility: true}}}});
+        return {...result, accessibilities: result.accessibilities.map(a => a.accessibility)};
     }
 
     async createCinema(cinema: CreateCinemaDTO): Promise<Cinema> {
@@ -46,6 +64,10 @@ export class CinemasService {
             }
             console.log(e);
             throw e;
+        }
+        const existing = await this.prisma.cinemaAccessibility.findFirst({where: {AND: [{cinemaId}, {accessibilityId}]}});
+        if(existing) {
+            throw new BadRequestException("This cinema already has this accessibility");
         }
         await this.prisma.cinemaAccessibility.create({data: {cinemaId, accessibilityId}});
         //TODO what should be returned ?

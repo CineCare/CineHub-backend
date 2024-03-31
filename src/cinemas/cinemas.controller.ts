@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller,UseGuards, Get, NotFoundException, Param, Post, Put, Delete } from '@nestjs/common';
+import { BadRequestException, Body, Controller,UseGuards, Get, NotFoundException, Param, Post, Put, Delete, Query } from '@nestjs/common';
 import { CinemasService } from './cinemas.service';
 import { Cinema } from '@prisma/client';
 import { CreateCinemaDTO } from './DTO/create-cinema.dto';
@@ -16,8 +16,21 @@ export class CinemasController {
     @ApiOkResponse({type: CinemaDTO, isArray: true})
     @ApiBadRequestResponse({type: BadRequestException })
     @Get()
-    async getList(): Promise<Cinema[]> {
-        return await this.cinemasService.getList();
+    @ApiParam({name: 'accessibility', description: 'filter list by accessibility type. Must be a string ( or a semicolon-separated list of strings ) among "prm", "deaf", "nops"'})
+    async getList(@Query('accessibility') accessibility: string): Promise<Cinema[]> {
+        let filters = [];
+        const accessibilityFilters = ['prm', 'deaf', 'nops'];
+        if(accessibility) {
+            const accessibilities = accessibility.split(';');
+            for(let item of accessibilities) {
+                if(!accessibilityFilters.includes(item)) {
+                    throw new BadRequestException(`Unknown accessibility type ${item}`);
+                }
+            }
+            filters.push(...accessibilities)
+        }
+        //console.log(filters);
+        return await this.cinemasService.getList(filters);
     }
 
     @ApiOkResponse({type: CinemaDTO})
@@ -25,7 +38,7 @@ export class CinemasController {
     @ApiBadRequestResponse({type: BadRequestException })
     @Get(':id')
     @ApiParam({name: 'id', description: 'id of the cinema. Must be a number'})
-    async getOne(@Param('id') id: string) {
+    async getOne(@Param('id') id: string): Promise<CinemaEntity> {
         //cast id param and throw error if not a number
         if(isNaN(+id)) {
             throw new BadRequestException("param id must be a number");
@@ -37,6 +50,9 @@ export class CinemasController {
                 throw new NotFoundException(`id ${id}`);
             }
             console.log(e);
+            if(e instanceof BadRequestException) {
+                throw e;
+            }
             throw new BadRequestException();
         }
     }

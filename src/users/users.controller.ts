@@ -8,6 +8,8 @@ import { PrefEntity } from './entities/prefs.entity';
 import { PrefDTO } from './DTO/pref.dto';
 import { PrefUpdateDTO } from './DTO/prefUpdate.dto';
 import { UpdateUserDTO } from './DTO/userUpdate.dto';
+import { castNumParam } from '../commons/utils/castNumParam';
+import { handleErrorResponse } from '../commons/utils/handleErrorResponse';
 
 @Controller('users')
 @ApiTags('users')
@@ -43,17 +45,10 @@ export class UsersController {
     @ApiBadRequestResponse({type: BadRequestException })
     @Get(':id')
     async getOne(@Param('id') id: string): Promise<UserEntity> {
-        if(isNaN(+id)) {
-            throw new BadRequestException("param id must be a number");
-        }
         try {
-            return await this.userService.getOne(+id);
+            return await this.userService.getOne(castNumParam('id', id));
         } catch(e) {
-            if(e.code === 'P2025') {
-                throw new NotFoundException(`id ${id}`);
-            }
-            console.log(e);
-            throw new BadRequestException();
+            handleErrorResponse(e, 'id', id);
         }
     } 
 
@@ -72,20 +67,10 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     async updatePref(@Param('prefId') prefId: string, @Request() req, @Body() pref: PrefUpdateDTO): Promise<PrefEntity> {
-        if(isNaN(+prefId)) {
-            throw new BadRequestException("param id must be a number");
-        }
         try {
-            return await this.userService.updatePref(+prefId, req.user.id, pref);
+            return await this.userService.updatePref(castNumParam('prefId', prefId), req.user.id, pref);
         } catch(e) {
-            if(e.code === 'P2025') {
-                throw new NotFoundException(`prefId ${prefId}`);
-            }
-            if(e instanceof UnauthorizedException) {
-                throw e;
-            }
-            console.log(e);
-            throw new BadRequestException();
+            handleErrorResponse(e, 'prefId', prefId);
         }
     }
 
@@ -96,20 +81,10 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     async deletePref(@Param('prefId') prefId: string, @Request() req): Promise<void> {
-        if(isNaN(+prefId)) {
-            throw new BadRequestException("param id must be a number");
-        }
         try {
-            return await this.userService.deletePref(+prefId, req.user.id);
+            return await this.userService.deletePref(castNumParam('prefId', prefId), req.user.id);
         } catch(e) {
-            if(e.code === 'P2025') {
-                throw new NotFoundException(`prefId ${prefId}`);
-            }
-            if(e instanceof UnauthorizedException) {
-                throw e;
-            }
-            console.log(e);
-            throw new BadRequestException();
+            handleErrorResponse(e, 'prefId', prefId);
         }
     }
 }

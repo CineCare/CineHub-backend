@@ -7,6 +7,9 @@ import { CinemaDTO } from './DTO/cinema.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UpdateCinemaDTO } from './DTO/update-cinema.dto';
 import { CinemaEntity } from './entities/cinema.entity';
+import { accessibilityFilters } from '../commons/constants/filters';
+import { castNumParam } from '../commons/utils/castNumParam';
+import { handleErrorResponse } from '../commons/utils/handleErrorResponse';
 
 @Controller('cinemas')
 @ApiTags('cinemas')
@@ -19,7 +22,6 @@ export class CinemasController {
     @ApiParam({name: 'accessibility', description: 'filter list by accessibility type. Must be a string ( or a semicolon-separated list of strings ) among "prm", "deaf", "nops"'})
     async getList(@Query('accessibility') accessibility: string): Promise<Cinema[]> {
         let filters = [];
-        const accessibilityFilters = ['prm', 'deaf', 'nops'];
         if(accessibility) {
             const accessibilities = accessibility.split(';');
             for(let item of accessibilities) {
@@ -29,7 +31,6 @@ export class CinemasController {
             }
             filters.push(...accessibilities)
         }
-        //console.log(filters);
         return await this.cinemasService.getList(filters);
     }
 
@@ -39,21 +40,10 @@ export class CinemasController {
     @Get(':id')
     @ApiParam({name: 'id', description: 'id of the cinema. Must be a number'})
     async getOne(@Param('id') id: string): Promise<CinemaEntity> {
-        //cast id param and throw error if not a number
-        if(isNaN(+id)) {
-            throw new BadRequestException("param id must be a number");
-        }
         try {
-            return await this.cinemasService.getOne(+id);
+            return await this.cinemasService.getOne(castNumParam('id', id));
         } catch(e) {
-            if(e.code === 'P2025') {
-                throw new NotFoundException(`id ${id}`);
-            }
-            console.log(e);
-            if(e instanceof BadRequestException) {
-                throw e;
-            }
-            throw new BadRequestException();
+            handleErrorResponse(e, 'id', id);
         }
     }
 
@@ -74,18 +64,10 @@ export class CinemasController {
     @ApiBearerAuth()
     @ApiParam({name: 'id', description: 'id of the cinema. Must be a number'})
     async update(@Param('id') id: string, @Body() cinema: UpdateCinemaDTO): Promise<CinemaEntity> {
-        //cast id param and throw error if not a number
-        if(isNaN(+id)) {
-            throw new BadRequestException("param id must be a number");
-        }
         try {
-            return await this.cinemasService.updateCinema(+id, cinema);
+            return await this.cinemasService.updateCinema(castNumParam('id', id), cinema);
         } catch(e) {
-            if(e.code === 'P2025') {
-                throw new NotFoundException(`id ${id}`);
-            }
-            console.log(e);
-            throw new BadRequestException();
+            handleErrorResponse(e, 'id', id);
         }
     }
 
@@ -97,17 +79,10 @@ export class CinemasController {
     @ApiBearerAuth()
     @ApiParam({name: 'id', description: 'id of the cinema. Must be a number'})
     async delete(@Param('id') id: string): Promise<void> {
-        if(isNaN(+id)) {
-            throw new BadRequestException("param id must be a number");
-        }
         try {
-            return await this.cinemasService.deleteCinema(+id);
+            return await this.cinemasService.deleteCinema(castNumParam('id', id));
         } catch(e) {
-            if(e.code === 'P2025') {
-                throw new NotFoundException(`id ${id}`);
-            }
-            console.log(e);
-            throw new BadRequestException();
+            handleErrorResponse(e, 'id', id);
         }
     }
 

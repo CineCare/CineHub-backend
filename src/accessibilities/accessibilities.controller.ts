@@ -5,6 +5,8 @@ import { AccessibilityEntity } from './entities/accessibility.entity';
 import { CreateAccessibilityDTO } from './DTO/create-accessibility.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UpdateAccessibilityDTO } from './DTO/update-accessibility.dto';
+import { castNumParam } from '../commons/utils/castNumParam';
+import { handleErrorResponse } from '../commons/utils/handleErrorResponse';
 
 @Controller('accessibilities')
 @ApiTags('accessibilities')
@@ -24,17 +26,10 @@ export class AccessibilitiesController {
     @Get(':id')
     async getOne(@Param('id') id: string): Promise<AccessibilityEntity> {
         //cast id param and throw error if not a number
-        if(isNaN(+id)) {
-            throw new BadRequestException("param id must be a number");
-        }
         try {
-            return await this.accessibilitiesService.getOne(+id);
+            return await this.accessibilitiesService.getOne(castNumParam('id', id));
         } catch(e) {
-            if(e.code === 'P2025') {
-                throw new NotFoundException(`id ${id}`);
-            }
-            console.log(e);
-            throw new BadRequestException();
+            handleErrorResponse(e, 'id', id);
         }
     }
 
@@ -54,18 +49,10 @@ export class AccessibilitiesController {
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     async updateAccessibility(@Body() accessibility: UpdateAccessibilityDTO, @Param('id') id: string): Promise<AccessibilityEntity> {
-        //cast id param and throw error if not a number
-        if(isNaN(+id)) {
-            throw new BadRequestException("param id must be a number");
-        }
         try {
-            return await this.accessibilitiesService.updateAccessibility(+id, accessibility);
+            return await this.accessibilitiesService.updateAccessibility(castNumParam('id', id), accessibility);
         } catch(e) {
-            if(e.code === 'P2025') {
-                throw new NotFoundException(`id ${id}`);
-            }
-            console.log(e);
-            throw new BadRequestException();
+            handleErrorResponse(e, 'id', id);
         }
     }
 
@@ -76,19 +63,10 @@ export class AccessibilitiesController {
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     async deleteAccessibility(@Param('id') id: string): Promise<void> {
-        //cast id param and throw error if not a number
-        if(isNaN(+id)) {
-            throw new BadRequestException("param id must be a number");
-        }
         try {
-            return await this.accessibilitiesService.deleteAccessibility(+id);
+            return await this.accessibilitiesService.deleteAccessibility(castNumParam('id', id));
         } catch(e) {
-            if(e.code === 'P2025') {
-                throw new NotFoundException(`id ${id}`);
-            }
-            console.log(e);
-            throw new BadRequestException();
+            handleErrorResponse(e, 'id', id);
         }
-        
     }
 }

@@ -4,14 +4,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCinemaDTO } from './DTO/create-cinema.dto';
 import { UpdateCinemaDTO } from './DTO/update-cinema.dto';
 import { CinemaEntity } from './entities/cinema.entity';
-import * as util from 'util';
+import { accessibilityFilters } from '../commons/constants/filters';
+//import * as util from 'util';
 
 @Injectable()
 export class CinemasService {
     constructor(private prisma: PrismaService) {}
     
     async getList(filters: string[]): Promise<Cinema[]> {
-        const accessibilityFilters = ['prm', 'deaf', 'nops'];
         let findOptions = {AND: []};
         let accessibilitiesFindOptions = [];
         for(let item of filters) {

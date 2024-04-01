@@ -8,7 +8,7 @@ export class CreateProductionHouseDTO {
     address1: string;
 
     @ApiProperty()
-    address2: string;
+    address2?: string;
 
     @ApiProperty()
     city: string;
@@ -21,4 +21,19 @@ export class CreateProductionHouseDTO {
 
     @ApiProperty()
     phone?: string;
+
+    @ApiProperty()
+    photo?: string;
+
+    @ApiProperty()
+    webSite?: string;
+
+    @ApiProperty()
+    gps?: string;
+
+    @ApiProperty()
+    description?: string;
+
+    @ApiProperty()
+    audio?: string;
 }

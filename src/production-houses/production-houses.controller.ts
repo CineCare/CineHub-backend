@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ProductionHousesService } from './production-houses.service';
 import { ProductionHouse } from '@prisma/client';
-import { CreateProductionHouseDTO } from './DTO/create-ProductionHouse.dto';
+import { CreateProductionHouseDTO } from './DTO/create-productionHouse.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('production-houses')

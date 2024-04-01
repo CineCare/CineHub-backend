@@ -1,20 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateCinemaDTO {
-    @ApiProperty()
-    name: string;
+export class UpdateCinemaDTO {
+    @ApiProperty({required: false})
+    name?: string;
 
-    @ApiProperty()
-    address1: string;
+    @ApiProperty({required: false})
+    address1?: string;
 
     @ApiProperty({required: false})
     address2?: string;
 
-    @ApiProperty()
-    city: string;
+    @ApiProperty({required: false})
+    city?: string;
 
-    @ApiProperty()
-    postalCode: string;
+    @ApiProperty({required: false})
+    postalCode?: string;
 
     @ApiProperty({required: false})
     email?: string;

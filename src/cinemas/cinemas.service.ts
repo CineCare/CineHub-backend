@@ -5,7 +5,7 @@ import { CreateCinemaDTO } from './DTO/create-cinema.dto';
 import { UpdateCinemaDTO } from './DTO/update-cinema.dto';
 import { CinemaEntity } from './entities/cinema.entity';
 import { accessibilityFilters } from '../commons/constants/filters';
-import { gpsDistance } from '../commons/utils/gpsDistance';
+import { castPositionParam, gpsDistance } from '../commons/utils/gpsUtils';
 import { CinemaDTO } from './DTO/cinema.dto';
 //import * as util from 'util';
 
@@ -13,8 +13,8 @@ import { CinemaDTO } from './DTO/cinema.dto';
 export class CinemasService {
     constructor(private prisma: PrismaService) {}
     
-    async getList(filters: string[]): Promise<Cinema[]> {
-        let findOptions = {AND: []};
+    async getList(filters: string[], coordinates?: {lat:number, lon: number}): Promise<CinemaEntity[]> {
+        let findOptions:any = {AND: []};
         let accessibilitiesFindOptions = [];
         for(let item of filters) {
             if(accessibilityFilters.includes(item)) {
@@ -26,18 +26,43 @@ export class CinemasService {
                 findOptions.AND = accessibilitiesFindOptions;
             }
         }
-        //console.log(util.inspect(findOptions, {depth: Infinity}));
-        return (await this.prisma.cinema.findMany({where: findOptions, include: {accessibilities: {select: {accessibility: true}}}})).map(cinema => { return { ...cinema, accessibilities: cinema.accessibilities.map(accessibility => accessibility.accessibility)}});
-        //return await this.prisma.cinema.findMany({where: {AND: [{accessibilities: {some: {accessibility: {picto: 'prm'}}}}, {accessibilities: {some: {accessibility: {picto: 'deaf'}}}}]}, include: {accessibilities: {select: {accessibility: true}}}});
+
+        let cinemasCoordinates:{id: number, gps: string, distance?: string}[] = undefined;
+        if(coordinates !== null && coordinates !== undefined) {
+            //* get gps and calculate distances
+            cinemasCoordinates = await this.prisma.cinema.findMany({where: findOptions, select: {id: true, gps: true}});
+            for(let item of cinemasCoordinates) {
+                let itemCoordinates = castPositionParam(item.gps);
+                item.distance = gpsDistance(coordinates.lat, coordinates.lon, itemCoordinates.lat, itemCoordinates.lon);
+            }
+            findOptions = {id: {in: cinemasCoordinates.map(e => e.id)}};
+        }
+
+        return (await this.prisma.cinema.findMany({where: findOptions, include: {accessibilities: {select: {accessibility: true}}}}))
+            .map(cinema => { return { 
+                ...cinema,
+                accessibilities: cinema.accessibilities.map(accessibility => accessibility.accessibility),
+                distance: cinemasCoordinates !== undefined ? cinemasCoordinates.find(e => e.id === cinema.id).distance : undefined
+            }})
+            .sort(
+                (a, b) => {
+                    return cinemasCoordinates !== undefined ? 
+                    +a.distance - +b.distance :
+                    a.id - b.id
+                }
+            );
     }
 
-    async getOne(id: number, coordinates?: {lat, lon}): Promise<CinemaEntity> {
+    async getOne(id: number, coordinates?: {lat: number, lon: number}): Promise<CinemaEntity> {
         const result = await this.prisma.cinema.findUniqueOrThrow({where: {id}, include: {accessibilities: {select: {accessibility: true}}}});
         let distance = undefined;
         if(coordinates !== null && coordinates !== undefined) {
+            //console.log("coordinates : ", coordinates);
             if(result.gps !== null && result.gps !== undefined) {
                 let cinemaCoordinates = {lat: +result.gps.split(';')[0], lon: +result.gps.split(';')[1]};
-                distance = gpsDistance(coordinates.lat, cinemaCoordinates.lon, cinemaCoordinates.lat, cinemaCoordinates.lon);
+                //console.log(cinemaCoordinates);
+                distance = gpsDistance(coordinates.lat, coordinates.lon, cinemaCoordinates.lat, cinemaCoordinates.lon);
+                //console.log("distance : ", distance);
             }
         }
         return {...result, accessibilities: result.accessibilities.map(a => a.accessibility), distance};

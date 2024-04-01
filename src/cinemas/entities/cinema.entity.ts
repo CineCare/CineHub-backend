@@ -48,5 +48,5 @@ export class CinemaEntity {
     updatedAt: Date
 
     @ApiProperty()
-    distance?: number
+    distance?: string
 }

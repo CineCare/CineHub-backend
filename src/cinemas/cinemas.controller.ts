@@ -10,6 +10,7 @@ import { CinemaEntity } from './entities/cinema.entity';
 import { accessibilityFilters } from '../commons/constants/filters';
 import { castNumParam } from '../commons/utils/castNumParam';
 import { handleErrorResponse } from '../commons/utils/handleErrorResponse';
+import { castPositionParam } from '../commons/utils/gpsUtils';
 
 @Controller('cinemas')
 @ApiTags('cinemas')
@@ -20,9 +21,11 @@ export class CinemasController {
     @ApiBadRequestResponse({type: BadRequestException })
     @Get()
     @ApiParam({name: 'accessibility', description: 'filter list by accessibility type. Must be a string ( or a semicolon-separated list of strings ) among "prm", "deaf", "nops"'})
-    async getList(@Query('accessibility') accessibility: string): Promise<Cinema[]> {
+    @ApiParam({name: 'position', description: 'current user gps coordinates. Lattitude and longitude, decimal format, semicolon-separated. Eg: "59.3293371;13.4877472"'})
+    async getList(@Query('accessibility') accessibility: string, @Query('position') position: string): Promise<Cinema[]> {
+        //* handle filters
         let filters = [];
-        if(accessibility) {
+        if(accessibility !== null && accessibility !== undefined) {
             const accessibilities = accessibility.split(';');
             for(let item of accessibilities) {
                 if(!accessibilityFilters.includes(item)) {
@@ -31,7 +34,14 @@ export class CinemasController {
             }
             filters.push(...accessibilities)
         }
-        return await this.cinemasService.getList(filters);
+        //* handle coordinates
+        let coordinates: {lat: number, lon: number} | undefined = undefined;
+        if(position !== null && position !== undefined) {
+            coordinates = castPositionParam(position);
+        }
+
+
+        return await this.cinemasService.getList(filters, coordinates);
     }
 
     @ApiOkResponse({type: CinemaDTO})
@@ -39,16 +49,11 @@ export class CinemasController {
     @ApiBadRequestResponse({type: BadRequestException })
     @Get(':id')
     @ApiParam({name: 'id', description: 'id of the cinema. Must be a number'})
-    @ApiParam({name: 'position', description: 'current user gps coordinates. Lattitude and longitude, semicolon-separated. Eg: "59.3293371;13.4877472"'})
+    @ApiParam({name: 'position', description: 'current user gps coordinates. Lattitude and longitude, decimal format, semicolon-separated. Eg: "59.3293371;13.4877472"'})
     async getOne(@Param('id') id: string, @Query('position') position: string): Promise<CinemaEntity> {
-        let coordinates: {lat, lon} | undefined = undefined;
+        let coordinates: {lat: number, lon: number} | undefined = undefined;
         if(position !== null && position !== undefined) {
-            let cast = position.split(';');
-            if(cast.length !== 2 || isNaN(+cast[0]) || isNaN(+cast[1])) {
-                throw new BadRequestException("Invalid gps coordinates");
-            }
-            coordinates = {lat: +cast[0], lon: +cast[1]};
-            
+            coordinates = castPositionParam(position);
         }
         try {
             return await this.cinemasService.getOne(castNumParam('id', id), coordinates);

@@ -39,9 +39,19 @@ export class CinemasController {
     @ApiBadRequestResponse({type: BadRequestException })
     @Get(':id')
     @ApiParam({name: 'id', description: 'id of the cinema. Must be a number'})
-    async getOne(@Param('id') id: string): Promise<CinemaEntity> {
+    @ApiParam({name: 'position', description: 'current user gps coordinates. Lattitude and longitude, semicolon-separated. Eg: "59.3293371;13.4877472"'})
+    async getOne(@Param('id') id: string, @Query('position') position: string): Promise<CinemaEntity> {
+        let coordinates: {lat, lon} | undefined = undefined;
+        if(position !== null && position !== undefined) {
+            let cast = position.split(';');
+            if(cast.length !== 2 || isNaN(+cast[0]) || isNaN(+cast[1])) {
+                throw new BadRequestException("Invalid gps coordinates");
+            }
+            coordinates = {lat: +cast[0], lon: +cast[1]};
+            
+        }
         try {
-            return await this.cinemasService.getOne(castNumParam('id', id));
+            return await this.cinemasService.getOne(castNumParam('id', id), coordinates);
         } catch(e) {
             handleErrorResponse(e, 'id', id);
         }

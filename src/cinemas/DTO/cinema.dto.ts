@@ -42,4 +42,7 @@ export class CinemaDTO {
 
     @ApiProperty()
     updatedAt: Date
+
+    @ApiProperty()
+    distance?: number
   }

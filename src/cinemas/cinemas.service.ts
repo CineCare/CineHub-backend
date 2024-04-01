@@ -5,6 +5,8 @@ import { CreateCinemaDTO } from './DTO/create-cinema.dto';
 import { UpdateCinemaDTO } from './DTO/update-cinema.dto';
 import { CinemaEntity } from './entities/cinema.entity';
 import { accessibilityFilters } from '../commons/constants/filters';
+import { gpsDistance } from '../commons/utils/gpsDistance';
+import { CinemaDTO } from './DTO/cinema.dto';
 //import * as util from 'util';
 
 @Injectable()
@@ -29,9 +31,16 @@ export class CinemasService {
         //return await this.prisma.cinema.findMany({where: {AND: [{accessibilities: {some: {accessibility: {picto: 'prm'}}}}, {accessibilities: {some: {accessibility: {picto: 'deaf'}}}}]}, include: {accessibilities: {select: {accessibility: true}}}});
     }
 
-    async getOne(id: number): Promise<CinemaEntity> {
+    async getOne(id: number, coordinates?: {lat, lon}): Promise<CinemaEntity> {
         const result = await this.prisma.cinema.findUniqueOrThrow({where: {id}, include: {accessibilities: {select: {accessibility: true}}}});
-        return {...result, accessibilities: result.accessibilities.map(a => a.accessibility)};
+        let distance = undefined;
+        if(coordinates !== null && coordinates !== undefined) {
+            if(result.gps !== null && result.gps !== undefined) {
+                let cinemaCoordinates = {lat: +result.gps.split(';')[0], lon: +result.gps.split(';')[1]};
+                distance = gpsDistance(coordinates.lat, cinemaCoordinates.lon, cinemaCoordinates.lat, cinemaCoordinates.lon);
+            }
+        }
+        return {...result, accessibilities: result.accessibilities.map(a => a.accessibility), distance};
     }
 
     async createCinema(cinema: CreateCinemaDTO): Promise<Cinema> {

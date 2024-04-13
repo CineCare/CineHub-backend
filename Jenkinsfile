@@ -44,6 +44,7 @@ pipeline {
         stage('lint') {
             steps {
                 sh '''
+                    npm run ci_eslint
                     ls
                 '''
             }

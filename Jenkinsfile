@@ -47,6 +47,11 @@ pipeline {
                     npm run ci_eslint
                 '''
             }
+            post {
+                always {
+                    recordIssues aggregatingResults: true, enableForFailure: true, failOnError: true, ignoreQualityGate: true, skipPublishingChecks: true, sourceDirectories: [[path: 'Backend/src']], tools: [checkStyle(pattern: 'Backend/eslint.xml')]
+                }
+            }
         }
 
         stage('build & push docker image') {

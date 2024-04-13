@@ -44,7 +44,7 @@ pipeline {
         stage('lint') {
             steps {
                 sh '''
-                    LINT=$(npx eslint -o ./test/test.html)
+                    LINT=$(npx eslint)
                     echo $LINT
                 '''
             }

@@ -15,7 +15,7 @@ export function gpsDistance(lat1: number, lon1: number, lat2: number, lon2: numb
 }
 
 export function castPositionParam(value: string): {lat: number, lon: number} {
-  let cast = value.split(';');
+  let cast = value.split(',');
   if(cast.length !== 2 || isNaN(+cast[0]) || isNaN(+cast[1])) {
     throw new BadRequestException("Invalid gps coordinates");
   }

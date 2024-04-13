@@ -20,13 +20,13 @@ export class CinemasController {
     @ApiOkResponse({type: CinemaDTO, isArray: true})
     @ApiBadRequestResponse({type: BadRequestException })
     @Get()
-    @ApiParam({name: 'accessibility', description: 'filter list by accessibility type. Must be a string ( or a semicolon-separated list of strings ) among "prm", "deaf", "nops"'})
-    @ApiParam({name: 'position', description: 'current user gps coordinates. Lattitude and longitude, decimal format, semicolon-separated. Eg: "59.3293371;13.4877472"'})
+    @ApiParam({name: 'accessibility', description: 'filter list by accessibility type. Must be a string ( or a comma-separated list of strings ) among "prm", "deaf", "nops"'})
+    @ApiParam({name: 'position', description: 'current user gps coordinates. Lattitude and longitude, US decimal format, comma-separated. Eg: "59.3293371;13.4877472"'})
     async getList(@Query('accessibility') accessibility: string, @Query('position') position: string): Promise<Cinema[]> {
         //* handle filters
         let filters = [];
         if(accessibility !== null && accessibility !== undefined) {
-            const accessibilities = accessibility.split(';');
+            const accessibilities = accessibility.split(',');
             for(let item of accessibilities) {
                 if(!accessibilityFilters.includes(item)) {
                     throw new BadRequestException(`Unknown accessibility type ${item}`);
@@ -39,8 +39,6 @@ export class CinemasController {
         if(position !== null && position !== undefined) {
             coordinates = castPositionParam(position);
         }
-
-
         return await this.cinemasService.getList(filters, coordinates);
     }
 

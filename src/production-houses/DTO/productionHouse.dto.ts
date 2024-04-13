@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Accessibility } from "@prisma/client";
 
-export class CinemaDTO {
+export class ProductionHouseDTO {
     @ApiProperty()
     id: number;
-
+    
     @ApiProperty()
     name: string;
 
@@ -30,6 +30,9 @@ export class CinemaDTO {
     photo: string | null;
 
     @ApiProperty()
+    webSite: string | null;
+
+    @ApiProperty()
     gps: string | null;
 
     @ApiProperty()
@@ -49,4 +52,5 @@ export class CinemaDTO {
 
     @ApiProperty()
     distance?: number;
-  }
+    
+}

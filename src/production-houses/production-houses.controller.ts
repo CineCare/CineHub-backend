@@ -4,11 +4,11 @@ import { ProductionHouse } from '@prisma/client';
 import { CreateProductionHouseDTO } from './DTO/create-productionHouse.dto';
 import { ApiBearerAuth, ApiBadRequestResponse, ApiOkResponse, ApiNotFoundResponse, ApiCreatedResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ProductionHouseDTO } from './DTO/productionHouse.dto';
-import { accessibilityFilters } from 'src/commons/constants/filters';
-import { castPositionParam } from 'src/commons/utils/gpsUtils';
-import { castNumParam } from 'src/commons/utils/castNumParam';
-import { handleErrorResponse } from 'src/commons/utils/handleErrorResponse';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { accessibilityFilters } from '../commons/constants/filters';
+import { castPositionParam } from '../commons/utils/gpsUtils';
+import { castNumParam } from '../commons/utils/castNumParam';
+import { handleErrorResponse } from '../commons/utils/handleErrorResponse';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UpdateProductionHouseDTO } from './DTO/update-productionHouse.dto';
 
 @Controller('production-houses')

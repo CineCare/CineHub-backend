@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ProductionHouse } from '@prisma/client';
-import { CreateProductionHouseDTO } from './DTO/create-ProductionHouse.dto'
+import { CreateProductionHouseDTO } from './DTO/create-productionHouse.dto'
 import { PrismaService } from '../prisma/prisma.service';
 import { accessibilityFilters } from 'src/commons/constants/filters';
 import { castPositionParam, gpsDistance } from 'src/commons/utils/gpsUtils';

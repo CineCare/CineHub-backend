@@ -44,7 +44,7 @@ pipeline {
         stage('lint') {
             steps {
                 sh '''
-                    LINT=$(npx eslint)
+                    LINT=$(eslint \"{src,apps,libs,test}/**/*.ts\")
                     echo $LINT
                 '''
             }

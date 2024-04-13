@@ -142,7 +142,7 @@ export class ProductionHousesService {
       if (e.code === 'P2025') {
         throw new NotFoundException(`productionHouseId ${productionHouseId}`);
       }
-      // tslint:disable-next-line
+      // eslint-disable-next-line
       console.log(e);
       throw e;
     }
@@ -154,7 +154,7 @@ export class ProductionHousesService {
       if (e.code === 'P2025') {
         throw new NotFoundException(`accessibilityId ${accessibilityId}`);
       }
-      // tslint:disable-next-line
+      // eslint-disable-next-line
       console.log(e);
       throw e;
     }
@@ -185,7 +185,7 @@ export class ProductionHousesService {
       if (e.code === 'P2025') {
         throw new NotFoundException(`productionHouseId ${productionHouseId}`);
       }
-      // tslint:disable-next-line
+      // eslint-disable-next-line
       console.log(e);
       throw e;
     }
@@ -199,7 +199,7 @@ export class ProductionHousesService {
           `accessibilityId ${accessibilityId} on cinema ${productionHouseId}`,
         );
       }
-      // tslint:disable-next-line
+      // eslint-disable-next-line
       console.log(e);
       throw e;
     }

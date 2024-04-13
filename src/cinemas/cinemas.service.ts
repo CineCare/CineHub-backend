@@ -131,7 +131,7 @@ export class CinemasService {
       if (e.code === 'P2025') {
         throw new NotFoundException(`cinemaId ${cinemaId}`);
       }
-      // tslint:disable-next-line
+      // eslint-disable-next-line
       console.log(e);
       throw e;
     }
@@ -143,7 +143,7 @@ export class CinemasService {
       if (e.code === 'P2025') {
         throw new NotFoundException(`accessibilityId ${accessibilityId}`);
       }
-      // tslint:disable-next-line
+      // eslint-disable-next-line
       console.log(e);
       throw e;
     }
@@ -172,7 +172,7 @@ export class CinemasService {
       if (e.code === 'P2025') {
         throw new NotFoundException(`cinemaId ${cinemaId}`);
       }
-      // tslint:disable-next-line
+      // eslint-disable-next-line
       console.log(e);
       throw e;
     }
@@ -186,7 +186,7 @@ export class CinemasService {
           `accessibilityId ${accessibilityId} on cinema ${cinemaId}`,
         );
       }
-      // tslint:disable-next-line
+      // eslint-disable-next-line
       console.log(e);
       throw e;
     }

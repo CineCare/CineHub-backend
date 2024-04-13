@@ -41,6 +41,15 @@ pipeline {
             }
         }
 
+        stage('lint') {
+            steps {
+                sh '''
+                    LINT=$(npx eslint -o ./test/test.html)
+                    echo $LINT
+                '''
+            }
+        }
+
         stage('build & push docker image') {
             when {
                 expression { env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'dev'}

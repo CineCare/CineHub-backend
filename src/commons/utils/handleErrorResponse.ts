@@ -14,7 +14,7 @@ export function handleErrorResponse(e, paramName, paramValue) {
   if (e instanceof UnauthorizedException) {
     throw e;
   }
-  // tslint:disable-next-line
+  // eslint-disable-next-line
   console.log(e);
   throw new BadRequestException();
 }

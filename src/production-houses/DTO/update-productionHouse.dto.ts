@@ -1,39 +1,39 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateProductionHouseDTO {
-    @ApiProperty()
-    name?: string;
+  @ApiProperty()
+  name?: string;
 
-    @ApiProperty()
-    address1?: string;
+  @ApiProperty()
+  address1?: string;
 
-    @ApiProperty()
-    address2?: string;
+  @ApiProperty()
+  address2?: string;
 
-    @ApiProperty()
-    city?: string;
+  @ApiProperty()
+  city?: string;
 
-    @ApiProperty()
-    postalCode?: string;
+  @ApiProperty()
+  postalCode?: string;
 
-    @ApiProperty()
-    email?: string;
+  @ApiProperty()
+  email?: string;
 
-    @ApiProperty()
-    phone?: string;
+  @ApiProperty()
+  phone?: string;
 
-    @ApiProperty()
-    photo?: string;
+  @ApiProperty()
+  photo?: string;
 
-    @ApiProperty()
-    webSite?: string;
+  @ApiProperty()
+  webSite?: string;
 
-    @ApiProperty()
-    gps?: string;
+  @ApiProperty()
+  gps?: string;
 
-    @ApiProperty()
-    description?: string;
+  @ApiProperty()
+  description?: string;
 
-    @ApiProperty()
-    audio?: string;
+  @ApiProperty()
+  audio?: string;
 }

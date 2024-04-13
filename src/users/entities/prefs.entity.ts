@@ -1,21 +1,21 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class PrefEntity {
-    @ApiProperty()
-    id: number;
+  @ApiProperty()
+  id: number;
 
-    @ApiProperty()
-    name: string;
+  @ApiProperty()
+  name: string;
 
-    @ApiProperty()
-    theme?: string;
+  @ApiProperty()
+  theme?: string;
 
-    @ApiProperty()
-    images?: boolean;
+  @ApiProperty()
+  images?: boolean;
 
-    @ApiProperty()
-    audio?: boolean;
+  @ApiProperty()
+  audio?: boolean;
 
-    @ApiProperty()
-    helpLevel?: number;
+  @ApiProperty()
+  helpLevel?: number;
 }

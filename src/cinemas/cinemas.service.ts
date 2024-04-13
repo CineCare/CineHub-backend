@@ -44,25 +44,16 @@ export class CinemasService {
                 accessibilities: cinema.accessibilities.map(accessibility => accessibility.accessibility),
                 distance: cinemasCoordinates !== undefined ? cinemasCoordinates.find(e => e.id === cinema.id).distance : undefined
             }})
-            .sort(
-                (a, b) => {
-                    return cinemasCoordinates !== undefined ? 
-                    +a.distance - +b.distance :
-                    a.id - b.id
-                }
-            );
+            .sort((a, b) => { return cinemasCoordinates !== undefined ? +a.distance - +b.distance : a.id - b.id });
     }
 
     async getOne(id: number, coordinates?: {lat: number, lon: number}): Promise<CinemaEntity> {
         const result = await this.prisma.cinema.findUniqueOrThrow({where: {id}, include: {accessibilities: {select: {accessibility: true}}}});
         let distance = undefined;
         if(coordinates !== null && coordinates !== undefined) {
-            //console.log("coordinates : ", coordinates);
             if(result.gps !== null && result.gps !== undefined) {
-                let cinemaCoordinates = {lat: +result.gps.split(';')[0], lon: +result.gps.split(';')[1]};
-                //console.log(cinemaCoordinates);
+                let cinemaCoordinates = {lat: +result.gps.split(',')[0], lon: +result.gps.split(',')[1]};
                 distance = gpsDistance(coordinates.lat, coordinates.lon, cinemaCoordinates.lat, cinemaCoordinates.lon);
-                //console.log("distance : ", distance);
             }
         }
         return {...result, accessibilities: result.accessibilities.map(a => a.accessibility), distance};

@@ -49,7 +49,7 @@ pipeline {
             }
             post {
                 always {
-                    recordIssues aggregatingResults: true, enableForFailure: true, failOnError: true, ignoreQualityGate: true, skipPublishingChecks: true, sourceDirectories: [[path: 'Backend/src']], tools: [checkStyle(pattern: 'Backend/eslint.xml')]
+                    recordIssues aggregatingResults: true, enabledForFailure: true, failOnError: true, ignoreQualityGate: true, skipPublishingChecks: true, sourceDirectories: [[path: 'Backend/src']], tools: [checkStyle(pattern: 'Backend/eslint.xml')]
                 }
             }
         }

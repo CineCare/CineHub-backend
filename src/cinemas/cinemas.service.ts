@@ -52,7 +52,7 @@ export class CinemasService {
         let distance = undefined;
         if(coordinates !== null && coordinates !== undefined) {
             if(result.gps !== null && result.gps !== undefined) {
-                let cinemaCoordinates = {lat: +result.gps.split(';')[0], lon: +result.gps.split(';')[1]};
+                let cinemaCoordinates = {lat: +result.gps.split(',')[0], lon: +result.gps.split(',')[1]};
                 distance = gpsDistance(coordinates.lat, coordinates.lon, cinemaCoordinates.lat, cinemaCoordinates.lon);
             }
         }

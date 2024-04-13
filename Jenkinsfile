@@ -44,8 +44,7 @@ pipeline {
         stage('lint') {
             steps {
                 sh '''
-                    LINT=$(npx eslint \"{src,apps,libs,test}/**/*.ts\")
-                    echo $LINT
+                    npm run ci_eslint
                 '''
             }
         }

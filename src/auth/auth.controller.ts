@@ -11,15 +11,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  @ApiOkResponse({ type: AuthEntity})
-  login(@Body() { email, password}: LoginDTO) {
+  @ApiOkResponse({ type: AuthEntity })
+  login(@Body() { email, password }: LoginDTO) {
     return this.authService.login(email, password);
   }
 
   @Post('register')
-  @ApiOkResponse({ type: AuthEntity})
-  register(@Body() {pseudo, email, password}: RegisterDTO) {
+  @ApiOkResponse({ type: AuthEntity })
+  register(@Body() { pseudo, email, password }: RegisterDTO) {
     return this.authService.register(pseudo, email, password);
   }
-
 }

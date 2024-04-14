@@ -9,7 +9,14 @@ import { ProductionHousesModule } from './production-houses/production-houses.mo
 import { AccessibilitiesModule } from './accessibilities/accessibilities.module';
 
 @Module({
-  imports: [CinemasModule, PrismaModule, AuthModule, UsersModule, ProductionHousesModule, AccessibilitiesModule],
+  imports: [
+    CinemasModule,
+    PrismaModule,
+    AuthModule,
+    UsersModule,
+    ProductionHousesModule,
+    AccessibilitiesModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

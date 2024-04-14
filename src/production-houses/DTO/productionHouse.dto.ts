@@ -1,56 +1,55 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Accessibility } from "@prisma/client";
+import { ApiProperty } from '@nestjs/swagger';
+import { Accessibility } from '@prisma/client';
 
 export class ProductionHouseDTO {
-    @ApiProperty()
-    id: number;
-    
-    @ApiProperty()
-    name: string;
+  @ApiProperty()
+  id: number;
 
-    @ApiProperty()
-    address1: string;
+  @ApiProperty()
+  name: string;
 
-    @ApiProperty()
-    address2: string | null;
+  @ApiProperty()
+  address1: string;
 
-    @ApiProperty()
-    city: string;
+  @ApiProperty()
+  address2: string | null;
 
-    @ApiProperty()
-    postalCode: string;
+  @ApiProperty()
+  city: string;
 
-    @ApiProperty()
-    email: string | null;
+  @ApiProperty()
+  postalCode: string;
 
-    @ApiProperty()
-    phone: string | null;
+  @ApiProperty()
+  email: string | null;
 
-    @ApiProperty()
-    photo: string | null;
+  @ApiProperty()
+  phone: string | null;
 
-    @ApiProperty()
-    webSite: string | null;
+  @ApiProperty()
+  photo: string | null;
 
-    @ApiProperty()
-    gps: string | null;
+  @ApiProperty()
+  webSite: string | null;
 
-    @ApiProperty()
-    description: string | null;
+  @ApiProperty()
+  gps: string | null;
 
-    @ApiProperty()
-    audio: string | null;
+  @ApiProperty()
+  description: string | null;
 
-    @ApiProperty()
-    createdAt: Date;
+  @ApiProperty()
+  audio: string | null;
 
-    @ApiProperty()
-    updatedAt: Date;
+  @ApiProperty()
+  createdAt: Date;
 
-    @ApiProperty()
-    accessibilities?: Accessibility[];
+  @ApiProperty()
+  updatedAt: Date;
 
-    @ApiProperty()
-    distance?: number;
-    
+  @ApiProperty()
+  accessibilities?: Accessibility[];
+
+  @ApiProperty()
+  distance?: number;
 }

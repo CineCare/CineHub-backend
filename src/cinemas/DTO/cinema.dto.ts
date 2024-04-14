@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Accessibility } from "@prisma/client";
+import { ApiProperty } from '@nestjs/swagger';
+import { Accessibility } from '@prisma/client';
 
 export class CinemaDTO {
   @ApiProperty()

@@ -21,6 +21,14 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    'no-console': 'warn'
+    'no-console': 'warn',
+    'prefer-template': 'error',
+    'require-await': 'error',
+    'no-constant-condition': 'error',
+    'no-duplicate-imports': 'error',
+    'no-template-curly-in-string': 'error',
+    'camelcase': 'error',
+    'eqeqeq': 'error',
+    'func-names': ['error', "as-needed"]
   },
 };

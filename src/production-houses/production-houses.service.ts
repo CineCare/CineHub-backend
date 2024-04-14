@@ -20,16 +20,24 @@ export class ProductionHousesService {
   ): Promise<ProductionHouse[]> {
     let findOptions: any = { AND: [] };
     const accessibilitiesFindOptions = [];
+    let searchTerm: string | null = null;
     for (const item of filters) {
       if (accessibilityFilters.includes(item)) {
         accessibilitiesFindOptions.push({
           accessibilities: { some: { accessibility: { picto: item } } },
         });
       }
+      if (item.startsWith('search:')) {
+        searchTerm = item.substring(7);
+      }
     }
     if (filters.length > 0) {
       if (accessibilitiesFindOptions.length > 0) {
         findOptions.AND = accessibilitiesFindOptions;
+      }
+      if (searchTerm) {
+        // eslint-disable-next-line prettier/prettier
+        findOptions.AND.push({OR: [{name : {contains: searchTerm}}, {address1: {contains: searchTerm}}, {description: {contains: searchTerm}}]})
       }
     }
 

@@ -49,9 +49,15 @@ export class CinemasController {
     description:
       'current user gps coordinates. Lattitude and longitude, US decimal format, comma-separated. Eg: "59.3293371;13.4877472"',
   })
+  @ApiParam({
+    name: 'search',
+    description:
+      'Search term. Will filter cinemas including this term in their name, adress or description',
+  })
   async getList(
     @Query('accessibility') accessibility: string,
     @Query('position') position: string,
+    @Query('search') search: string,
   ): Promise<Cinema[]> {
     //* handle filters
     const filters = [];
@@ -63,6 +69,9 @@ export class CinemasController {
         }
       }
       filters.push(...accessibilities);
+    }
+    if (search !== null && search !== undefined) {
+      filters.push(`search:${search}`);
     }
     //* handle coordinates
     let coordinates: { lat: number; lon: number } | undefined = undefined;

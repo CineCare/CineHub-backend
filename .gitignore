@@ -36,3 +36,5 @@ lerna-debug.log*
 
 #miscellaneous
 .env
+/src/streams/assets
+/assets

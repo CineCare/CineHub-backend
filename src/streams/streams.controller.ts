@@ -2,10 +2,14 @@ import {
   BadRequestException,
   Controller,
   Get,
-  StreamableFile,
+  Header,
+  Headers,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { createReadStream } from 'fs';
+import { createReadStream, statSync } from 'fs';
+import { Response } from 'express';
 
 @Controller('streams')
 @ApiTags('streams')
@@ -13,10 +17,34 @@ export class StreamsController {
   @ApiOkResponse()
   @ApiBadRequestResponse({ type: BadRequestException })
   @Get()
-  getStream(): StreamableFile {
-    const file = createReadStream(
-      '../../assets/Freaks_La_Monstrueuse_Parade_1932_VOSTFR.mp4',
-    );
-    return new StreamableFile(file);
+  @Header('Accept-Ranges', 'bytes')
+  @Header('Content-Type', 'video/mp4')
+  getStream(@Headers() headers, @Res() res: Response) {
+    const videoPath = './assets/Freaks_La_Monstrueuse_Parade_1932_VOSTFR.mp4';
+    const { size } = statSync(videoPath);
+    const videoRange = headers.range;
+    if (videoRange) {
+      const parts = videoRange.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : size - 1;
+      const chunkSize = end - start + 1;
+      const readStreamfile = createReadStream(videoPath, {
+        start,
+        end,
+        highWaterMark: 60,
+      });
+      const head = {
+        'Content-Range': `bytes ${start}-${end}/${size}`,
+        'Content-Length': chunkSize,
+      };
+      res.writeHead(HttpStatus.PARTIAL_CONTENT, head); //206
+      readStreamfile.pipe(res);
+    } else {
+      const head = {
+        'Content-Length': size,
+      };
+      res.writeHead(HttpStatus.OK, head); //200
+      createReadStream(videoPath).pipe(res);
+    }
   }
 }

@@ -5,6 +5,7 @@ import {
   Header,
   Headers,
   HttpStatus,
+  Logger,
   Res,
 } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -14,12 +15,14 @@ import { Response } from 'express';
 @Controller('streams')
 @ApiTags('streams')
 export class StreamsController {
+  private readonly logger = new Logger(StreamsController.name);
   @ApiOkResponse()
   @ApiBadRequestResponse({ type: BadRequestException })
   @Get()
   @Header('Accept-Ranges', 'bytes')
   @Header('Content-Type', 'video/mp4')
   getStream(@Headers() headers, @Res() res: Response) {
+    this.logger.log('stream begins');
     const videoPath = `${process.env.ASSETS_PATH}/Freaks_La_Monstrueuse_Parade_1932_VOSTFR.mp4`;
     const { size } = statSync(videoPath);
     const videoRange = headers.range;

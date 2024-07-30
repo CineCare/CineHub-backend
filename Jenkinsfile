@@ -29,6 +29,9 @@ pipeline {
                 git branch: '${BRANCH_NAME}',
                 credentialsId: 'cinecare_backend',
                 url: 'git@github.com:CineCare/CineHub-backend.git'
+                script {
+                    env.GIT_COMMIT_MSG = sh(script: 'git log -1 --pretty=%B ${GIT_COMMIT}', returnStdout: true).trim()
+                }
             }
         }
 
@@ -87,6 +90,25 @@ pipeline {
                     '''
                 }
             }
+        }
+    }
+
+    post {
+        regression {
+            sh "echo ${GIT_COMMIT_MSG}"
+            discordSend description: "Jenkins Pipeline Build for StreamAccess-Backend ${BRANCH_NAME} failed ! ☹️\n\ngit commit message :\n${GIT_COMMIT_MSG}",
+            footer: "Better luck next try ?",
+            link: "$BUILD_URL",
+            result: currentBuild.currentResult,
+            title: JOB_NAME,
+            webhookURL: "https://discord.com/api/webhooks/1208855718338363572/hPxGKwxnigUMvt0ZaPSsAiU1p8Udkdpg4Yo79UCIfo_lxm7Phbe-JLYdTV-22GFCXvYU"
+        }
+        fixed {
+            discordSend description: "Jenkins Pipeline Build for StreamAccess-Backend ${BRANCH_NAME} succeed ! 😎\n\ngit commit message :\n${GIT_COMMIT_MSG}",
+            footer: "Good job !",
+            link: "$BUILD_URL",
+            result: currentBuild.currentResult,
+            title: JOB_NAME, webhookURL: "https://discord.com/api/webhooks/1208855718338363572/hPxGKwxnigUMvt0ZaPSsAiU1p8Udkdpg4Yo79UCIfo_lxm7Phbe-JLYdTV-22GFCXvYU"
         }
     }
 }

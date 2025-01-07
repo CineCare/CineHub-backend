@@ -13,7 +13,7 @@ import { CinemaEntity } from './entities/cinema.entity';
 
 @Injectable()
 export class CinemasService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getList(
     filters: string[],

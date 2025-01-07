@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-export function handleErrorResponse(e, paramName, paramValue) {
+export function handleErrorResponse(e, paramName: string, paramValue: string) {
   if (e.code === 'P2025') {
     throw new NotFoundException(`${paramName} ${paramValue}`);
   }
